@@ -1,12 +1,12 @@
 Two-photon imaging analysis pipeline for optogenetic+ingestions experiments
 
-Before processing, make sure all raw imaging data are properly organised and named: 
+Before processing, make sure all raw imaging data are properly organized and named: 
+
 The file organization example: 
 D:\2PhoData\210518\M1T3i-4m-ZT-IN1_GCa,25F11A24D12D_Chr,St,FO,LP20G20,10mA1s,RA
 A. Processing raw data 
 
 Step1: Z-projection
-
 Run “Step1_BatchZProjectionMaker.m” by changing the list_of_directories to the directory of the data folder. Set the parameters as below. 
 
 ProjectionType=1; %1-MaxProjection, 2-MeanProjection
@@ -24,7 +24,6 @@ list_of_directories = {...
 Explanation: This code will make the averaged z-axis projection of all captured z-stacks and save them in a new folder, “ZProjected”, under the data folder.
 
 Step2: Image registration
-
 Run “Step2_BatchRegistration.m” by changing the list_of_directories to the directory of the data folder. Set the parameters as below:
 
 GetFixedFrameBeforeStart=1;
@@ -47,6 +46,7 @@ list_of_directories = {...
    };
 
 Explanation: This code will register all the Z-projected images inside the “ZProjected” folder and save the registered images in a new folder called “Reg_Matlab_translation” or “Reg_Matlab_rigid” inside the “ZProjected” folder.
+
 Important: After this step finishes, manually check the registration quality of the registered images! If the registration quality is too bad, run this code again by changing “TransformType='rigid'” to “TransformType='translation’” or the other way around. If the quality is still bad, use TurboReg (a FIJI plugin, website: https://bigwww.epfl.ch/thevenaz/turboreg/) to register the z-projected image stack. If TurboReg can produce a good registration result, make a new folder named “TurboReged” inside the “ZProjected” folder, and save the registered image stack as a .tif image sequence in that “TurboReged” folder. If TurboReg also cannot produce a good registration result, either discard this data or manually register every z-projected frame of the stack using the TrakEM2 function in FIJI (In FIJI, File>>New>>TrakEM2 (blank), drag the Z projected folder into the TrakEM2 window, unlock all frames, set one frame as red and another frame as green, and manually edit the XY coordinates of each frame. When finished, export the whole image sequence to .tif flat images).
 
 Step3: Extraction of Raw fluorescent data.
@@ -74,7 +74,9 @@ Step4: Extract the optogenetic stimulation time series for optogenetic trials an
 
 Before running the code: For optogenetic stimulation, change the “ThorSync001” folder names in the Date Folder to “ThorSync[TrialName].” The Thorsync file name and the 2Pdata names must match for the code to work. 
 
-Run “Step4_BatchPlotting_MultiROI.m” after changing the list_of_directories to the directory of the data folder. Set the parameters as below:
+Run “Step4_BatchPlotting_MultiROI.m” after changing the list_of_directories to the directory of the data folder. 
+
+Set the parameters as below:
 
 BackGroundSubtractionOn1OrOff0=1;%Set this to 1 if you want background subtraction, set this to 0 if you don’t want background subtraction 
 FineTuningLightOnFrame=0;(not being used)
@@ -108,12 +110,11 @@ Note: After this step, manually check the optogenetic stimulation onset and offs
 
 B. Calculating and plotting dF/F0
 
-(Fig. 6g-j) For fluorescent food ingestion imaging, together with optogenetic stimulation experiments:
-1.	Place raw fluo data (“RegFluoDatL-xxxx.xlsx”) into the same folder A, together with “Ingxxx.txt” data:
-2.	Run “Step5_Add_Ingestion_Bout_Indicator_OptoIng.m” with the directory of folder A. 
-3.	Set ImageTimeMin and ImageTimeSec accordingly.
+Step 5: Place raw fluo data (“RegFluoDatL-xxxx.xlsx”) into the same folder A, together with “Ingxxx.txt” data.
 
-Important parameter settings used to generate Fig. 6 g-j:
+Run “Step5_Add_Ingestion_Bout_Indicator_OptoIng.m” after changing the list_of_directories to the directory of folder A.
+
+Parameter settings used to generate Fig. 6 g-j:
 ImageTimeMin=4; %Change here!!
 ImageTimeSec=0; %Change here!!
 TotalTimeSec=ImageTimeMin*60+ImageTimeSec;
@@ -121,9 +122,9 @@ SetColorSpec={[0, 0, 1];[0,1,0];[0.6, 0.8250, 0.280];[0.9290, 0.6940, 0.5250];[0
    [0.660, 0.8740, 0.480];[0, 0.5, 0.16];[0.5010, 0.7450, 0.9330];[0.6350, 0.0780, 0.2840];[0.6350, 0.0780, 0.55];[0.6350, 0.0780, 0.3];[0.6350, 0.2, 0.55];[0.6350, 0.2780, 0.65];[0.9350, 0.0780, 0.55];[0.8350, 0.780, 0.55];[0.8500, 0.6250, 0.280];[0.6, 0.6250, 0.980]};
 WriteInAnotherCol=1;
 
-4. Run “Step6_Segmentation_df_f_calculation_OptoIng.m” using the directory of folder A. Set ImageTimeMin and ImageTimeSec accordingly.
+Step6: Run “Step6_Segmentation_df_f_calculation_OptoIng.m” after changing the list_of_directories to the directory of the folder A.
 
-Parameter settings used to generate Fig. 6 g-j:
+Parameter settings used to generate Figs. 6g-j:
 
 Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
 TimeStartBeforeStim=6;
@@ -139,10 +140,9 @@ TotalTimeInSec=ImageTimeMin*60+ImageTimeSec;
 BasalFTimeLength=3;
 BalsalFEndTime=0;
 
+Step7: Run “Step7_Plot_Separate_ROIs_OptoIng.m” after changing the list_of_directories to the directory of folder A.
 
-5. Run “Step7_Plot_Separate_ROIs_OptoIng.m” using the directory of folder A to plot the data.
-
-To generate Fig 6 g and i, use the following parameters:
+To generate Figs 6g, i, use the following parameters:
 
 Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
 PlotROI3OrNo1=1;
@@ -156,6 +156,4 @@ PlotTimeBeforeStimOnset=6;
 PlotTimeAfterStimOnset=6;
 XFontSize=20;
 YFontSize=20;
-
-6.	The processed data (for Fig.6h and j) are located on the 4th and 5th page of the Excel spreadsheet “PlottedData.xlsx”.
 
