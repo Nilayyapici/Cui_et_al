@@ -74,7 +74,9 @@ Step4: Extract the optogenetic stimulation time series for optogenetic trials an
 
 Before running the code: For optogenetic stimulation, change the “ThorSync001” folder names in the Date Folder to “ThorSync[TrialName].” The Thorsync file name and the 2Pdata names must match for the code to work. 
 
-Run “Step4_BatchPlotting_MultiROI.m” after changing the list_of_directories to the directory of the data folder. Set the parameters as below:
+Run “Step4_BatchPlotting_MultiROI.m” after changing the list_of_directories to the directory of the data folder. 
+
+Set the parameters as below:
 
 BackGroundSubtractionOn1OrOff0=1;%Set this to 1 if you want background subtraction, set this to 0 if you don’t want background subtraction 
 FineTuningLightOnFrame=0;(not being used)
@@ -108,8 +110,10 @@ Note: After this step, manually check the optogenetic stimulation onset and offs
 
 B. Calculating and plotting dF/F0
 
-Step 5: Place raw fluo data (“RegFluoDatL-xxxx.xlsx”) into the same folder A, together with “Ingxxx.txt” data:
+Step 5: Place raw fluo data (“RegFluoDatL-xxxx.xlsx”) into the same folder A, together with “Ingxxx.txt” data.
+
 Run “Step5_Add_Ingestion_Bout_Indicator_OptoIng.m” after changing the list_of_directories to the directory of folder A.
+
 Parameter settings used to generate Fig. 6 g-j:
 ImageTimeMin=4; %Change here!!
 ImageTimeSec=0; %Change here!!
@@ -120,7 +124,7 @@ WriteInAnotherCol=1;
 
 Step6: Run “Step6_Segmentation_df_f_calculation_OptoIng.m” after changing the list_of_directories to the directory of the folder A.
 
-Parameter settings used to generate Fig. 6 g-j:
+Parameter settings used to generate Figs. 6g-j:
 
 Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
 TimeStartBeforeStim=6;
@@ -138,7 +142,7 @@ BalsalFEndTime=0;
 
 Step7: Run “Step7_Plot_Separate_ROIs_OptoIng.m” after changing the list_of_directories to the directory of folder A.
 
-To generate Fig 6 g and i, use the following parameters:
+To generate Figs 6g, i, use the following parameters:
 
 Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
 PlotROI3OrNo1=1;
