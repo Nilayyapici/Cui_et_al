@@ -7,6 +7,7 @@ D:\2PhoData\210518\M1T3i-4m-ZT-IN1_GCa,25F11A24D12D_Chr,St,FO,LP20G20,10mA1s,RA
 A. Processing raw data
 
 Step1: Z-projection
+
 Run “Step1_BatchZProjectionMaker.m” by changing the list_of_directories to the directory of the data folder. Set the parameters as below. 
 
 ProjectionType=2; %1-MaxProjection, 2-MeanProjection
@@ -24,6 +25,7 @@ list_of_directories = {...
 Explanation: This code will make the averaged z-axis projection of all captured z-stacks and save them in a new folder, “ZProjected”, under the data folder.
 
 Step2: Image registration
+
 Run “Step2_BatchRegistration.m” by changing the list_of_directories to the directory of the data folder. Set the parameters as below:
 
 GetFixedFrameBeforeStart=1;
@@ -103,7 +105,8 @@ Explanation: This code will read the 'RegFluoDatL.xlsx', and compute and plot th
 
 Important: The dF/F and plots generated in this step are only a quick preview of the data, and they are NOT used for any figure in the study. 
 	
-Note: After this step, manually check the optogenetic stimulation onset and offset frame number by comparing them to the actual frame number in which the background elevation appears in the data stack. This correction is needed because of issues in ThorSynch.  
+Note: After this step, manually check the optogenetic stimulation onset and offset frame number by comparing them to the actual frame number in which the background elevation appears in the data stack. This correction is needed because of issues in ThorSynch. 
+
 B. Calculating and plotting dF/F0
 Step 5. Put all raw fluo data (“RegFluoDatL-xxxx.xlsx”) of the same data group into the same folder. In the following text, that folder will be referred to as “Folder A.” 
 
@@ -158,11 +161,11 @@ AutoLineColor=0;
 SetColorSpec={[0.5, 0.6470, 0.7410];[0, 0, 1];[0.8500, 0.6250, 0.980];[0.9290, 0.6940, 0.5250];[0.4940, 0.6840, 0.5560];[0.75, 0.5, 0.75];...
    [0.4660, 0.9740, 0.8880];[0, 0.5, 0];[0.5010, 0.7450, 0.9330];[0.6350, 0.0780, 0.2840];[0.6350, 0.0780, 0.55];[0.6350, 0.0780, 0.3];[0.6350, 0.2, 0.55];[0.6350, 0.2780, 0.65];[0.9350, 0.0780, 0.55];[0.8350, 0.780, 0.55];[0.8500, 0.6250, 0.280];[0.6, 0.6250, 0.980]};
 
-
 Step7.	This code calculates absolute peak dF/F in Fig. 1h and Fig. 4b (can be positive or negative) dF/F in 0 to 4 seconds after optogenetic stimulation onset. 
 
 Run the MATLAB code “Step7_Calculate_peak_df_f_Opto.m” using the following parameters:  
 (Parameter used for Figure 1h). 
+
 StimStartRow=31;
 TimeAxisResolution=0.25;%in seconds.
 CompareRangeStartInTime=0;%in sec. Relative to Stim start time. If it equal to stim start time, this parameter should be 0.
