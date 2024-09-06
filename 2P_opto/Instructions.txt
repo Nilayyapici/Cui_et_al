@@ -5,7 +5,7 @@ The file organization example:
 D:\2PhoData\210518\M1T3i-4m-ZT-IN1_GCa,25F11A24D12D_Chr,St,FO,LP20G20,10mA1s,RA
 A. Processing raw data
 
-Step1: Z-projection
+Step 1: Z-projection
 Run “Step1_BatchZProjectionMaker.m” by changing the list_of_directories to the directory of the data folder. Set the parameters as below. 
 
 ProjectionType=2; %1-MaxProjection, 2-MeanProjection
@@ -22,7 +22,8 @@ list_of_directories = {...
 
 Explanation: This code will make the averaged z-axis projection of all captured z-stacks and save them in a new folder, “ZProjected”, under the data folder.
 
-Step2: Image registration
+Step 2: Image registration
+
 Run “Step2_BatchRegistration.m” by changing the list_of_directories to the directory of the data folder. Set the parameters as below:
 
 GetFixedFrameBeforeStart=1;
@@ -47,7 +48,7 @@ list_of_directories = {...
 Explanation: This code will register all the Z-projected images inside the “ZProjected” folder and save the registered images in a new folder called “Reg_Matlab_translation” or “Reg_Matlab_rigid” inside the “ZProjected” folder.
 Important: After this step finishes, manually check the registration quality of the registered images! If the registration quality is too bad, run this code again by changing “TransformType='rigid'” to “TransformType='translation’” or the other way around. If the quality is still bad, use TurboReg (a FIJI plugin, website: https://bigwww.epfl.ch/thevenaz/turboreg/) to register the z-projected image stack. If TurboReg can produce a good registration result, make a new folder named “TurboReged” inside the “ZProjected” folder, and save the registered image stack as a .tif image sequence in that “TurboReged” folder. If TurboReg also cannot produce a good registration result, either discard this data or manually register every z-projected frame of the stack using the TrakEM2 function in FIJI (In FIJI, File>>New>>TrakEM2 (blank), drag the Z projected folder into the TrakEM2 window, unlock all frames, set one frame as red and another frame as green, and manually edit the XY coordinates of each frame. When finished, export the whole image sequence to .tif flat images).
 
-Step3: Extraction of Raw fluorescent data.
+Step 3: Extraction of Raw fluorescent data.
 
 Run “Step3_BatchExtractionMultiROIVer.m” by changing the list_of_directories to the directory of the data folder. 
 
@@ -68,7 +69,7 @@ Once the parameters are set, it will extract the average grey value within each 
 
 If the code has run successfully, it will save two copies of the Excel data file: one inside the registered image folder and the other in the RawFluo folder. There should be a time series column for each ROI and a column for the background. 
 
-Step4: Extract the optogenetic stimulation time series for optogenetic trials and add the stimulus ON column
+Step 4: Extract the optogenetic stimulation time series for optogenetic trials and add the stimulus ON column
 
 Before running the code: For optogenetic stimulation, change the “ThorSync001” folder names in the Date Folder to “ThorSync[TrialName].” The Thorsync file name and the 2Pdata names must match for the code to work. 
 
@@ -102,9 +103,11 @@ Explanation: This code will read the 'RegFluoDatL.xlsx', and compute and plot th
 
 Important: The dF/F and plots generated in this step are only a quick preview of the data, and they are NOT used for any figure in the study. 
 	
-Note: After this step, manually check the optogenetic stimulation onset and offset frame number by comparing them to the actual frame number in which the background elevation appears in the data stack. This correction is needed because of issues in ThorSynch.  
+Note: After this step, manually check the optogenetic stimulation onset and offset frame number by comparing them to the actual frame number in which the background elevation appears in the data stack. This correction is needed because of issues in ThorSynch. 
+
 B. Calculating and plotting dF/F0
-Step 5. Put all raw fluo data (“RegFluoDatL-xxxx.xlsx”) of the same data group into the same folder. In the following text, that folder will be referred to as “Folder A.” 
+
+Step 5: Put all raw fluo data (“RegFluoDatL-xxxx.xlsx”) of the same data group into the same folder. In the following text, that folder will be referred to as “Folder A.” 
 
 Run “Step5_Segmentation_df_f_calculation_Opto.m” with changing the list_of_directories to the directory of the folder A.
 
@@ -130,7 +133,7 @@ Importantly, for both 1-second and 10-second stimulation trials, set BasalFTimeL
 
 Explanation: This code will generate the binned dF/F and interpolated dFF of each stimulation segment and save them into a new folder named “BindFFSeg” or “IntdFFSeg” inside the folder A, respectively.
 
-Step6. Run “Step6_Plotting_Opto.m” with changing the list_of_directories to the directory of the folder A.
+Step 6: Run “Step6_Plotting_Opto.m” with changing the list_of_directories to the directory of the folder A.
 
 For 1-second stimulation trials, set 
 stimtime=1; %In second, Change here if need!!!
@@ -158,7 +161,7 @@ SetColorSpec={[0.5, 0.6470, 0.7410];[0, 0, 1];[0.8500, 0.6250, 0.980];[0.9290, 0
    [0.4660, 0.9740, 0.8880];[0, 0.5, 0];[0.5010, 0.7450, 0.9330];[0.6350, 0.0780, 0.2840];[0.6350, 0.0780, 0.55];[0.6350, 0.0780, 0.3];[0.6350, 0.2, 0.55];[0.6350, 0.2780, 0.65];[0.9350, 0.0780, 0.55];[0.8350, 0.780, 0.55];[0.8500, 0.6250, 0.280];[0.6, 0.6250, 0.980]};
 
 
-Step7.	This code calculates absolute peak dF/F in Fig. 1h and Fig. 4b (can be positive or negative) dF/F in 0 to 4 seconds after optogenetic stimulation onset. 
+Step 7:	This code calculates absolute peak dF/F in Fig. 1h and Fig. 4b (can be positive or negative) dF/F in 0 to 4 seconds after optogenetic stimulation onset. 
 
 Run the MATLAB code “Step7_Calculate_peak_df_f_Opto.m” using the following parameters:  
 (Parameter used for Figure 1h). 
