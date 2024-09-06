@@ -25,8 +25,10 @@ ThorImage software (Thorlabs, version 4.0.2020.2171), ThorSync software (Thorlab
 
 MATLAB (Mathworks, MATLAB R2022b), Fiji (ImageJ, Java 1.8.0_172(64-bit), TurboReg plugin (Biomedical Imaging Group, Swiss Federal Institute of Technology Lausanne, July 7, 2011 distribution), Zen software (ZEISS, blue edition, version 3.6),  Imaris (Oxford Instruments, version 10.1.1). 
 
-The majority of the analyses were performed using MATLAB. 
-Statistics were conducted in GraphPad Prism. Figures were produced using both MATLAB and Prism. 
+**Data Analysis**
+
+The majority of the analyses were performed using MATLAB (Mathworks, MATLAB R2022b). 
+Statistics were conducted in GraphPad Prism. Figures were produced using both MATLAB and Prism (GraphPad, Version 10.1.1). 
 
 
 
