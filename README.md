@@ -1,7 +1,7 @@
 # Cui_et_al
 This repository contains code for producing the analyses and figures in Cui_2024 et al: A gut-brain-gut interoceptive circuit loop gates sugar ingestion in Drosophila. 
 
-The pipeline for analyzing two-photon imaging uses raw data (unregistered two-photon TIFF images). Due to the significant storage space required, these data are not currently available online but can be provided upon request. Minimally processed data examples, including time series for imaging ROIs, are available in this repository and provided in data source files. 
+The pipeline for analyzing two-photon imaging uses raw data (unregistered two-photon TIFF images). Due to the significant storage space required, these data are not currently available online but can be provided upon request. Minimally processed data examples, including time series for imaging ROIs are provided in data source files. 
 
 **Repository structure**
 
