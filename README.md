@@ -7,7 +7,9 @@ The pipeline for analyzing two-photon imaging uses raw data (unregistered two-ph
 Each folder contains MATLAB code to process the two-photon raw imaging data, extract the fluorescent values, and generate all the figures for each dataset. The figure numbers are indicated in the readme.txt files in each folder. 
 
 Cui_et_al/2P_ingestion
+
 Cui_et_al/2P_opto+ingestion
+
 Cui_et_al/2P_opto
 
 Each folder contains a "functions" subfolder that contains the additional MATLAB functions required to run the code properly. These functions should be downloaded together with the code. 
