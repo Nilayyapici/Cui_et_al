@@ -14,10 +14,7 @@ Each folder contains a "functions" subfolder that contains the additional MATLAB
 
 **Software Requirements**
 
-**Data collection: **
-ThorImage software (Thorlabs, version 4.0.2020.2171)
-ThorSync software (ThorLabs, version 4.1.2020.1131)
-SpinView software (FLIR systems, Spinnaker 2.0.0.147)
+Data collection:ThorImage software (Thorlabs, version 4.0.2020.2171), ThorSync software (ThorLabs, version 4.1.2020.1131), SpinView software (FLIR systems, Spinnaker 2.0.0.147)
 
 Data processing:
 MATLAB (Mathworks, MATLAB R2022b)
