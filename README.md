@@ -23,7 +23,9 @@ ThorImage software (Thorlabs, version 4.0.2020.2171), ThorSync software (Thorlab
 
 **Data processing**
 
-MATLAB (Mathworks, MATLAB R2022b), Fiji (ImageJ, Java 1.8.0_172(64-bit), TurboReg plugin (Biomedical Imaging Group, Swiss Federal Institute of Technology Lausanne, July 7, 2011 distribution), Zen software (ZEISS, blue edition, version 3.6),  Imaris (Oxford Instruments, version 10.1.1). 
+Two photon imaging: MATLAB (Mathworks, MATLAB R2022b), Fiji (ImageJ, Java 1.8.0_172(64-bit), TurboReg plugin (Biomedical Imaging Group, Swiss Federal Institute of Technology Lausanne, July 7, 2011 distribution)
+
+Confical imaging: Zen software (ZEISS, blue edition, version 3.6),  Imaris (Oxford Instruments, version 10.1.1). 
 
 **Data Analysis**
 
