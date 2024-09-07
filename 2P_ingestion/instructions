@@ -204,14 +204,14 @@ For plotting Fig. 4d, Fig. 5f
 
 Step 5: Place raw fluo data (“RegFluoDatL-xxxx.xlsx”) of 1st Bout only trials and the “Ingxxxx.txt” into the same folder. Remember to make sure the trial name is matching.
 
-Run “Step5_Add_Ingestion_Bout_Indicator_Ing.m” after changing the list_of_directories to the directory of the folder A.
+Run “Step5_Add_Ingestion_Bout_Indicator.m” after changing the list_of_directories to the directory of the folder A.
 
 Use the following parameters:
 
 ImageTimeMin=8;
 ImageTimeSec=0;
 
-Step 6: Run “Step6_Segmentation_df_f_calculation_Ing.m” with the name of the folder above. 
+Step 6: Run “Step6_Segmentation_df_f_calculation.m” with the name of the folder above. 
 
 Use the following parameters:
 
@@ -257,7 +257,7 @@ Use the following parameters:
 ImageTimeMin=8;
 ImageTimeSec=0;
 
-Step 6: Run “Step6_Segmentation_df_f_calculation_Ing.m” with the name of the folder above. 
+Step 6: Run “Step6_Segmentation_df_f_calculation.m” with the name of the folder above. 
 
 Use the following parameters:
 
@@ -297,14 +297,14 @@ For plotting Fig. 6d, Fig. S10d
 
 Step 5: Put all registered fluo data excel file and ingestion .txt files in the same folder A, make sure the name match
 
-Run “Step5_Add_Ingestion_Bout_Indicator_Ing.m” after changing the list_of_directories to the directory of the folder A.
+Run “Step5_Add_Ingestion_Bout_Indicator.m” after changing the list_of_directories to the directory of the folder A.
 
 Use the following parameters:
 
 ImageTimeMin=8; 
 ImageTimeSec=0; 
 
-Step 6: Run “Step6_Segmentation_df_f_calculation_Ing.m” with the directory of folder A. 
+Step 6: Run “Step6_Segmentation_df_f_calculation.m” with the directory of folder A. 
 
 Use the following parameters:
 
