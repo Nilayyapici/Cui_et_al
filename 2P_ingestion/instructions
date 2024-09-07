@@ -323,7 +323,6 @@ Manually change the “BindFFSeg” (inside “IngAdded” folder) folder name i
 Step 7d: Run “Step7d_Plot_ingestion_ROIs.m”  with the directory of folder A. 
 
 Use the following parameters:
-Use the following parameters:
 
 Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
 PlotROI3OrNo1=0;
