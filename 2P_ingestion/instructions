@@ -7,6 +7,7 @@ D:\2PhoData\210518\M1T3i-4m-ZT-IN1_GCa,25F11A24D12D_Chr,St,FO,LP20G20,10mA1s,RA
 A. Processing raw data 
 
 Step1: Z-projection
+
 Run “Step1_BatchZProjectionMaker.m” by changing the list_of_directories to the directory of the data folder. Set the parameters as below. 
 
 ProjectionType=1; %1-MaxProjection, 2-MeanProjection
