@@ -30,7 +30,7 @@ Cui_et_al/2P_opto
 
 *Confocal imaging* 
 * Zen software (ZEISS version XX)
-* 
+  
 **Data processing**
 
 *Two photon imaging*
