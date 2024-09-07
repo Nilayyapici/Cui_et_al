@@ -1,0 +1,340 @@
+Two-photon imaging analysis pipeline for ingestion experiments
+
+Before processing, make sure all raw imaging data are properly organised and named: 
+
+The file organization example: 
+D:\2PhoData\210518\M1T3i-4m-ZT-IN1_GCa,25F11A24D12D_Chr,St,FO,LP20G20,10mA1s,RA
+A. Processing raw data 
+
+Step1: Z-projection
+Run “Step1_BatchZProjectionMaker.m” by changing the list_of_directories to the directory of the data folder. Set the parameters as below. 
+
+ProjectionType=1; %1-MaxProjection, 2-MeanProjection
+WriteMultiPageTiff=0; % Set this to 0 if you want to write separate tif images
+WriteSeparateTiff=1; % Set this to 0 if you want to write multipage tif images
+
+list_of_directories = {...
+   'D:\2PhoData\230702'...
+%     Put the path of the folders to be processed here
+%     'D:\2PhoData\210929'...
+%     'D:\2PhoData\210930'...
+%     'G:\2PhoData\210915'...
+   };
+
+Explanation: This code will make the averaged z-axis projection of all captured z-stacks and save them in a new folder, “ZProjected”, under the data folder.
+
+Step2: Image registration
+
+Run “Step2_BatchRegistration.m” by changing the list_of_directories to the directory of the data folder. Set the parameters as below:
+
+GetFixedFrameBeforeStart=1;
+ChooseFixedFrame=0;
+DoAutoFixedFrame=1;
+AutoFixedFrameNo=345; %Arbitrarily chosen fixed frame number
+RunRegistration=1;
+UseChoosedFixedFrame=0;
+UseAutoFixedFrame=1;
+UseAdjustedFixedImgForReg=0;
+xmlname='Experiment.xml';
+ProjFolderName='ZProjected';
+TransformType='rigid'; % Change if needed! Either use translation or rigid. 
+
+list_of_directories = {...
+   'F:\2PhoData\240119'...
+   'F:\2PhoData\240121'...
+   'F:\2PhoData\240122'...
+%     'D:\2PhoData\231210'...
+   };
+
+Explanation: This code will register all the Z-projected images inside the “ZProjected” folder and save the registered images in a new folder called “Reg_Matlab_translation” or “Reg_Matlab_rigid” inside the “ZProjected” folder.
+Important: After this step finishes, manually check the registration quality of the registered images! If the registration quality is too bad, run this code again by changing “TransformType='rigid'” to “TransformType='translation’” or the other way around. If the quality is still bad, use TurboReg (a FIJI plugin, website: https://bigwww.epfl.ch/thevenaz/turboreg/) to register the z-projected image stack. If TurboReg can produce a good registration result, make a new folder named “TurboReged” inside the “ZProjected” folder, and save the registered image stack as a .tif image sequence in that “TurboReged” folder. If TurboReg also cannot produce a good registration result, either discard this data or manually register every z-projected frame of the stack using the TrakEM2 function in FIJI (In FIJI, File>>New>>TrakEM2 (blank), drag the Z projected folder into the TrakEM2 window, unlock all frames, set one frame as red and another frame as green, and manually edit the XY coordinates of each frame. When finished, export the whole image sequence to .tif flat images).
+
+Step3: Extraction of Raw fluorescent data.
+
+Run “Step3_BatchExtractionMultiROIVer.m” by changing the list_of_directories to the directory of the data folder. 
+
+Set the parameters in the code as below:
+
+xmlname='Experiment.xml'; ( this is the Thor image file for imaging parameters)
+UseMeanProjOrMaxProj='mean';% Input 'mean' for mean t-projection, 'max' for max t-projection
+ThresholdRatio=0.5;
+list_of_directories = {...
+   'D:\2PhoData\240119'...
+   'D:\2PhoData\240121'...
+   'D:\2PhoData\240122'...
+};
+
+This code will first request the user to draw the ROI(s) and background ROI. 
+
+Once the parameters are set, it will extract the average grey value within each ROI from every frame of the Z projected image stack and store it into an Excel file “RegFluoDatL.xlsx
+
+If the code has run successfully, it will save two copies of the Excel data file: one inside the registered image folder and the other in the RawFluo folder. There should be a time series column for each ROI and a column for the background. 
+
+Step4: Extract the optogenetic stimulation time series for optogenetic trials and add the stimulus ON column
+
+Before running the code: For optogenetic stimulation, change the “ThorSync001” folder names in the Date Folder to “ThorSync[TrialName].” The Thorsync file name and the 2Pdata names must match for the code to work. 
+
+Run “Step4_BatchPlotting_MultiROI.m” after changing the list_of_directories to the directory of the data folder. Set the parameters as below:
+
+BackGroundSubtractionOn1OrOff0=1;%Set this to 1 if you want background subtraction, set this to 0 if you don’t want background subtraction 
+FineTuningLightOnFrame=0;(not being used)
+RawFluoFileName='RegFluoDatL.xlsx';
+xmlname='Experiment.xml';
+ThorSyncFileName='Episode001.h5';
+ThorSyncSettingFileName='ThorRealTimeDataSettings.xml';
+SetColorSpec={[0,0,1];[0,1,0];[0.9290, 0.6940, 0.5250];[1, 0.3, 1];[0.5, 0.70, 0.7410];[0.940, 0.840, 0.6560];[0.5, 0.5, 0.75];...
+   [0.660, 0.8740, 0.480];[0, 0.5, 0.16];[0.5010, 0.7450, 0.9330];[0.6350, 0.0780, 0.2840];[0.6350, 0.0780, 0.55];[0.6350, 0.0780, 0.3];[0.6350, 0.2, 0.55];[0.6350, 0.2780, 0.65];[0.9350, 0.0780, 0.55];[0.8350, 0.780, 0.55];[0.8500, 0.6250, 0.280];[0.6, 0.6250, 0.980];[0.16, 0.1620, 0.980];[0.26, 0.26, 0.9];[0.36, 0.36250, 0.2];[0.46, 0.50, 0.90];[0.1, 0.5, 0.16];[0.2, 0.15, 0.16];[0.3, 0.25, 0.16];[0.4, 0.5, 0.16];[0.5, 0.5, 0.16];[0.6, 0.5, 0.16];[0.7, 0.5, 0.16];[0.8, 0.5, 0.16];[0.9, 0.5, 0.16];[0.4, 0.25, 0.16]};
+BasalFrameTime=10; 
+BalsalFEndTime=3;%This means be basal frame is set to "from the 13 secs before first stim to 3 secs before first stim"
+CutTailFrameNo=0;
+LeastStimInterval=100;%In frame
+BGIndThre=0.55;
+AutoDetectTrialTime=1;% Set it to 1 ->this code will read the 7th character of your Trial Folder's name and determine the trial time. Set it to 0 to manually input the trial time below
+ImageTimeMin=8;  Set to 8 for 8 minutes trials, 4 for 4 minute trials.
+ImageTimeSec=0;
+PulseOn=0;
+PesudoFirstStimTime=31;%This is the time of the pseudo-first stimulation used for basal F time window selection when no optogenetic stimulation exists in the trial.
+list_of_directories = {...
+   'D:\2PhoData\240119'...
+   'D:\2PhoData\240121'...
+   'D:\2PhoData\240122'...
+};
+
+Explanation: This code will read the 'RegFluoDatL.xlsx', and compute and plot the dF/F of the whole trial for each trial in the data folders enlisted in list_of_directories. This code will also read the optogenetic stimulation pattern data stored in “Episode001.h5” file from ThorSync, find and write the onset and offset time of each optogenetic stimulation, and write them into a new column in its output. 
+
+Important: The dF/F and plots generated in this step are only a quick preview of the data, and they are NOT used for any figure in the study. 
+	
+Note: After this step, manually check the optogenetic stimulation onset and offset frame number by comparing them to the actual frame number in which the background elevation appears in the data stack. This correction is needed because of issues in ThorSync. 
+ 
+B. Calculating and plotting dF/F0
+
+For plotting in (Fig. 3d):
+
+Step 5: Place raw fluo data (“RegFluoDatL-xxxx.xlsx”) and the “Ingxxxx.txt” of the example trial you want to plot into the same folder A. Remember to make sure the trial name is matching.
+
+Run “Step5_Add_Ingestion_Bout_Indicator.m” after changing the list_of_directories to the directory of the folder A.
+
+Use the following parameters:
+
+
+Step 6: Run “Step6_Segmentation_df_f_calculation.m” after changing the list_of_directories to the directory of the folder A. 
+
+Use the following parameters: 
+
+BackGroundSubtractionOn1OrOff0=0;
+Time0IsStimOnIndicator1OrIngestionOnIndicator2=2;
+TimeStartBeforeStim=99999;
+TimeStopAfterStim=99999;
+TimeResolution=1;
+dFFOutlierThreshold=10000;
+ImageTimeMin=8;
+ImageTimeSec=0;
+TotalTimeInSec=ImageTimeMin*60+ImageTimeSec;
+BasalFTimeLength=10;
+BalsalFEndTime=0;
+list_of_directories = {...
+   'G:\My Drive\Worki\AvgdFFResponsePlot,Chec-Current\IngstionDFF\222FluoXlsx,NoBGSub\Gr43a\Gr43a,ExampleTrial'...
+};
+
+Step7a: Run “Step7a_Plot_Single_Trials.m” after changing the list_of_directories to the directory of the folder A.
+
+Use the following parameters:
+
+HasOptoAndIngIndicator=0;
+ImageTimeMin=8;
+ImageTimeSec=0;
+PlotROIAveragedFFOrNot=0;
+TotalTimeSec=ImageTimeMin*60+ImageTimeSec;
+SetColorSpec={[0, 0, 1];[0,1,0];[0.6, 0.8250, 0.280];[0.9290, 0.6940, 0.5250];[0.4940, 0.6840, 0.5560];[0.75, 0.5, 0.75];...
+   [0.660, 0.8740, 0.480];[0, 0.5, 0.16];[0.5010, 0.7450, 0.9330];[0.6350, 0.0780, 0.2840];[0.6350, 0.0780, 0.55];...
+   [0.6350, 0.0780, 0.3];[0.6350, 0.2, 0.55];[0.6350, 0.2780, 0.65];[0.9350, 0.0780, 0.55];[0.8350, 0.780, 0.55];...
+   [0.8500, 0.6250, 0.280];[0.6, 0.6250, 0.980];[0.6350, 0.2780, 0.9];[0.6350, 0.2780, 0.47];[0.3, 0.2780, 0.9];[0.6350, 0.7780, 0.9];[0.6350, 0.80, 0.9]};
+list_of_directories = {...
+       'G:\My Drive\Worki\AvgdFFResponsePlot,Chec-Current\IngstionDFF\222FluoXlsx,NoBGSub\Gr43a\Gr43a,ExampleTrial\IngAdded\BindFFSeg'...
+}；
+
+For plotting in Fig. 3e:
+
+Step 5: Place the raw fluo data (“RegFluoDatL-xxxx.xlsx”) and the “Ingxxxx.txt” into the same folder A. Remember to make sure the trial name is matching.
+
+Run “Step5_Add_Ingestion_Bout_Indicator.m” after changing the list_of_directories to the directory of the folder A.
+
+Use the following parameters:
+
+ImageTimeMin=8;
+ImageTimeSec=0;
+
+Step 6: Run “Step6_Segmentation_df_f_calculation.m” after changing the list_of_directories to the directory of the folder A.
+
+Use the following parameters:
+
+BackGroundSubtractionOn1OrOff0=0;
+Time0IsStimOnIndicator1OrIngestionOnIndicator2=2;
+TimeStartBeforeStim=30;
+TimeStopAfterStim=30;
+TimeResolution=1;
+dFFOutlierThreshold=10000;
+ImageTimeMin=8;
+ImageTimeSec=0;
+TotalTimeInSec=ImageTimeMin*60+ImageTimeSec;
+BasalFTimeLength=10;
+BalsalFEndTime=0;
+
+
+Step 7b: Run “Step7b_Plot_average_cell_response.m” with the directory of folder A added into the list_of_directories, and with the following parameters:
+
+TestModeOn1OrOff0=0; 
+TestOutputPath='F:\666ScriptTest2024Aug26\TestPlotResults';%This variable is only used if TestModeOn1OrOff0=1, so it will not be used at this time.
+
+UseGreatestdFFDuringStim0OrUseMeandFFDuringStim1=0;
+YLimSetting=[-0.2,0.5];
+FigureWidth=5;
+FigureHeight=5;
+BoutIndicatorMaxYHeightRatio=0.2;
+TimeLengthOf1stBoutCuts_Min=0;
+TimeLengthOf1stBoutCuts_Sec=60;
+RespThresFactor=3;
+BasalDFFTimeBeginInSec=-30;
+BasalDFFTimeEndInSec=0;
+
+For plotting Fig. 4d, Fig. 5f 
+
+Step 5: Place raw fluo data (“RegFluoDatL-xxxx.xlsx”) of 1st Bout only trials and the “Ingxxxx.txt” into the same folder. Remember to make sure the trial name is matching.
+
+Run “Step5_Add_Ingestion_Bout_Indicator_Ing.m” after changing the list_of_directories to the directory of the folder A.
+
+Use the following parameters:
+
+ImageTimeMin=8;
+ImageTimeSec=0;
+
+Step 6: Run “Step6_Segmentation_df_f_calculation_Ing.m” with the name of the folder above. 
+
+Use the following parameters:
+
+BackGroundSubtractionOn1OrOff0=0;
+Time0IsStimOnIndicator1OrIngestionOnIndicator2=2;
+TimeStartBeforeStim=50;
+TimeStopAfterStim=50;
+TimeResolution=1;
+dFFOutlierThreshold=10000;
+ImageTimeMin=8;
+ImageTimeSec=0;
+BasalFTimeLength=10;
+BalsalFEndTime=0;
+
+
+Step 7c: Run “Step7c_Plot_averaged_ROI_response”, set PlotFromFluoData=1; 
+
+Parameters used to generate Fig. 4d:
+
+PlotFromFluoData=1;
+YLimSetting=[-0.2, 0.5];
+BoutIndicatorMaxYHeightRatio=0.2;
+FigureWidth=5;
+FigureHeight=3.5;
+PlotTimeBeforeStimOnset=50;
+PlotTimeAfterStimOnset=50; 
+
+Parameters used to generate Fig. 5f:
+
+PlotFromFluoData=1;
+YLimSetting=[-0.2, 0.05];
+BoutIndicatorMaxYHeightRatio=0.2;
+FigureWidth=12;
+FigureHeight=2.5;
+PlotTimeBeforeStimOnset=50;
+PlotTimeAfterStimOnset=50;
+For plotting Fig. 6b, Fig. S10b 
+Step 5: Place raw fluo data (“RegFluoDatL-xxxx.xlsx”) and the “Ingxxxx.txt” into the same folder A. Remember to make sure the trial name is matching.
+Run “Step5_Add_Ingestion_Bout_Indicator_Ing.m” after changing the list_of_directories to the directory of the folder A.
+
+Use the following parameters:
+
+ImageTimeMin=8;
+ImageTimeSec=0;
+
+Step 6: Run “Step6_Segmentation_df_f_calculation_Ing.m” with the name of the folder above. 
+
+Use the following parameters:
+
+BackGroundSubtractionOn1OrOff0=0;
+Time0IsStimOnIndicator1OrIngestionOnIndicator2=2;
+TimeStartBeforeStim=50;
+TimeStopAfterStim=50;
+TimeResolution=1;
+dFFOutlierThreshold=10000;
+ImageTimeMin=8;
+ImageTimeSec=0;
+TotalTimeInSec=ImageTimeMin*60+ImageTimeSec;
+BasalFTimeLength=10;
+BalsalFEndTime=0;
+
+Manually change the name of the generated folder from “BindFFSeg” to “BindFFSegIo”
+
+Step 7d: Run “Step7d_Plot_ingestion_ROIs.m” with the name of the folder A above.
+
+Using the following parameters:
+
+Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
+PlotROI3OrNo1=1;
+PlotIngestionBout1OrNot0=1;
+%------------------------
+YLimSetting=[-2,8];
+XLimSetting=[-50,50];
+YStepSize=2;
+XTickStepSize=50;
+BoutIndicatorMaxYHeightRatio=0.2;
+PlotTimeBeforeStimOnset=50;
+PlotTimeAfterStimOnset=50;
+XFontSize=20;
+YFontSize=20;
+
+For plotting Fig. 6d, Fig. S10d  
+
+Step 5: Put all registered fluo data excel file and ingestion .txt files in the same folder A, make sure the name match
+
+Run “Step5_Add_Ingestion_Bout_Indicator_Ing.m” after changing the list_of_directories to the directory of the folder A.
+
+Use the following parameters:
+
+ImageTimeMin=8; 
+ImageTimeSec=0; 
+
+Step 6: Run “Step6_Segmentation_df_f_calculation_Ing.m” with the directory of folder A. 
+
+Use the following parameters:
+
+BackGroundSubtractionOn1OrOff0=0;
+Time0IsStimOnIndicator1OrIngestionOnIndicator2=2;
+TimeStartBeforeStim=50;
+TimeStopAfterStim=50;
+TimeResolution=1;
+dFFOutlierThreshold=10000;
+ImageTimeMin=8;
+ImageTimeSec=0;
+TotalTimeInSec=ImageTimeMin*60+ImageTimeSec;
+BasalFTimeLength=10;
+BalsalFEndTime=0;
+
+Manually change the “BindFFSeg” (inside “IngAdded” folder) folder name into “BindFFSegIo”.
+
+Step 7d: Run “Step7d_Plot_ingestion_ROIs.m”  with the directory of folder A. 
+
+Use the following parameters:
+Use the following parameters:
+
+Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
+PlotROI3OrNo1=0;
+PlotIngestionBout1OrNot0=1;
+%------------------------
+YLimSetting=[-2,8];
+XLimSetting=[-50,50];
+YStepSize=2;
+XTickStepSize=50;
+BoutIndicatorMaxYHeightRatio=0.2;
+PlotTimeBeforeStimOnset=50;
+PlotTimeAfterStimOnset=50;
+XFontSize=20;
+YFontSize=20;
+
