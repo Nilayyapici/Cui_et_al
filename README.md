@@ -24,11 +24,16 @@ Cui_et_al/2P_opto
 
 **Data collection**
 
-ThorImage software (Thorlabs, version 4.0.2020.2171), ThorSync software (Thorlabs, version 4.1.2020.1131), SpinView software (FLIR systems, Spinnaker 2.0.0.147)
+* ThorImage software (Thorlabs, version 4.0.2020.2171)
+* ThorSync software (Thorlabs, version 4.1.2020.1131)
+* SpinView software (FLIR systems, Spinnaker 2.0.0.147)
 
 **Data processing**
 
-Two photon imaging: MATLAB (Mathworks, MATLAB R2022b), Fiji (ImageJ, Java 1.8.0_172(64-bit), TurboReg plugin (Biomedical Imaging Group, Swiss Federal Institute of Technology Lausanne, July 7, 2011 distribution).
+*Two photon imaging*
+* MATLAB (Mathworks, MATLAB R2022b)
+* Fiji (ImageJ, Java 1.8.0_172(64-bit)
+* TurboReg plugin (Biomedical Imaging Group, Swiss Federal Institute of Technology Lausanne, July 7, 2011 distribution).
 
 Confical imaging: Zen software (ZEISS, blue edition, version 3.6),  Imaris (Oxford Instruments, version 10.1.1). 
 
