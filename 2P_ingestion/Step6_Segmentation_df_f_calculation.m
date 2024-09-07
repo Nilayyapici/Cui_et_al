@@ -1,4 +1,4 @@
-%-----------Calculate and plot average response curve (across differenet
+%-----------Calculate and plot average response curve (across different
 %trials) 2021Jan22version-------------
 %----In this version, dFF will be re-calculated, and the normalization will
 %be performed for each time of stimulation-------
