@@ -117,6 +117,8 @@ Run “Step5_Add_Ingestion_Bout_Indicator.m” after changing the list_of_direct
 
 Use the following parameters:
 
+ImageTimeMin=8;
+ImageTimeSec=0;
 
 Step 6: Run “Step6_Segmentation_df_f_calculation.m” after changing the list_of_directories to the directory of the folder A. 
 
