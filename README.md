@@ -45,9 +45,7 @@ Cui_et_al/2P_opto
 **Data Analysis**
 
 The majority of the analyses were performed using MATLAB (Mathworks, MATLAB R2022b). 
-Statistics were conducted in GraphPad Prism(GraphPad, Version 10.1.1). Figures were produced using both MATLAB and Prism. 
-
-Guidelines to run each code are provided in the instructions.txt file in each code folder.  
+Statistics were conducted in GraphPad Prism (GraphPad, Version 10.1.1). Figures were produced using both MATLAB and Prism. 
 
 **Installation guide**
 
