@@ -49,7 +49,8 @@ Statistics were conducted in GraphPad Prism (GraphPad, Version 10.1.1). Figures 
 
 **Installation guide**
 
-After downloading and installing MATLAB, place all the .m files into the same folder and run the code using MATLAB according to the instructions. MATLAB installation approximately takes 5-10 minutes in a regular desktop computer.
+After downloading and installing MATLAB, place all the .m files into the same folder and run the code using MATLAB according to the instructions. 
+MATLAB installation approximately takes 5-10 minutes in a regular desktop computer. Code run time per trial is approximately 15 minutes, but this might change based on the computer processing speed. 
 
 
 
