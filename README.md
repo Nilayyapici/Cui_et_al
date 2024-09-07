@@ -10,7 +10,7 @@ The pipeline for analyzing two-photon imaging uses raw data (unregistered two-ph
 * Each folder also contains an instruction.txt that explains how the code should be run on the raw data.
 * Each folder contains a "functions" subfolder that contains the additional MATLAB functions required to run the code properly. These functions should be downloaded together with the code. 
 
-**Folder names **
+**Folder names**
 
 Cui_et_al/2P_ingestion
 
