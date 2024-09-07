@@ -65,7 +65,7 @@ list_of_directories = {...
    'D:\2PhoData\240122'...
 };
 
-This code will first request the user to draw the ROI(s) and background ROI. 
+This code will first request the user to draw the ROI(s) and background ROI. The ROI selection is done in the Z- and t-projected images ("summary image of the trial"). 
 
 Once the parameters are set, it will extract the average grey value within each ROI from every frame of the Z projected image stack and store it into an Excel file “RegFluoDatL.xlsx
 
