@@ -6,7 +6,7 @@ The file organization example:
 D:\2PhoData\210518\M1T3i-4m-ZT-IN1_GCa,25F11A24D12D_Chr,St,FO,LP20G20,10mA1s,RA
 A. Processing raw data 
 
-Step1: Z-projection
+Step 1: Z-projection
 
 Run “Step1_BatchZProjectionMaker.m” by changing the list_of_directories to the directory of the data folder. Set the parameters as below. 
 
@@ -24,7 +24,7 @@ list_of_directories = {...
 
 Explanation: This code will make the averaged z-axis projection of all captured z-stacks and save them in a new folder, “ZProjected”, under the data folder.
 
-Step2: Image registration
+Step 2: Image registration
 
 Run “Step2_BatchRegistration.m” by changing the list_of_directories to the directory of the data folder. Set the parameters as below:
 
@@ -50,7 +50,7 @@ list_of_directories = {...
 Explanation: This code will register all the Z-projected images inside the “ZProjected” folder and save the registered images in a new folder called “Reg_Matlab_translation” or “Reg_Matlab_rigid” inside the “ZProjected” folder.
 Important: After this step finishes, manually check the registration quality of the registered images! If the registration quality is too bad, run this code again by changing “TransformType='rigid'” to “TransformType='translation’” or the other way around. If the quality is still bad, use TurboReg (a FIJI plugin, website: https://bigwww.epfl.ch/thevenaz/turboreg/) to register the z-projected image stack. If TurboReg can produce a good registration result, make a new folder named “TurboReged” inside the “ZProjected” folder, and save the registered image stack as a .tif image sequence in that “TurboReged” folder. If TurboReg also cannot produce a good registration result, either discard this data or manually register every z-projected frame of the stack using the TrakEM2 function in FIJI (In FIJI, File>>New>>TrakEM2 (blank), drag the Z projected folder into the TrakEM2 window, unlock all frames, set one frame as red and another frame as green, and manually edit the XY coordinates of each frame. When finished, export the whole image sequence to .tif flat images).
 
-Step3: Extraction of Raw fluorescent data.
+Step 3: Extraction of Raw fluorescent data.
 
 Run “Step3_BatchExtractionMultiROIVer.m” by changing the list_of_directories to the directory of the data folder. 
 
@@ -71,7 +71,7 @@ Once the parameters are set, it will extract the average grey value within each 
 
 If the code has run successfully, it will save two copies of the Excel data file: one inside the registered image folder and the other in the RawFluo folder. There should be a time series column for each ROI and a column for the background. 
 
-Step4: Extract the optogenetic stimulation time series for optogenetic trials and add the stimulus ON column
+Step 4: Extract the optogenetic stimulation time series for optogenetic trials and add the stimulus ON column
 
 Before running the code: For optogenetic stimulation, change the “ThorSync001” folder names in the Date Folder to “ThorSync[TrialName].” The Thorsync file name and the 2Pdata names must match for the code to work. 
 
@@ -137,7 +137,7 @@ list_of_directories = {...
    'G:\My Drive\Worki\AvgdFFResponsePlot,Chec-Current\IngstionDFF\222FluoXlsx,NoBGSub\Gr43a\Gr43a,ExampleTrial'...
 };
 
-Step7a: Run “Step7a_Plot_Single_Trials.m” after changing the list_of_directories to the directory of the folder A.
+Step 7a: Run “Step7a_Plot_Single_Trials.m” after changing the list_of_directories to the directory of the folder A.
 
 Use the following parameters:
 
