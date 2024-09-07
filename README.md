@@ -49,8 +49,9 @@ Statistics were conducted in GraphPad Prism (GraphPad, Version 10.1.1). Figures 
 
 **Installation guidelines**
 
-After downloading and installing MATLAB, place all the .m files into the same folder and run the code using MATLAB according to the instructions. 
-MATLAB installation approximately takes 5-10 minutes in a regular desktop computer. Code run time per trial is approximately 15 minutes, but this might change based on the computer processing speed. 
+This code requires the MATLAB desktop application to run. MATLAB installation approximately takes 5-10 minutes in a regular desktop computer. After the main software installation is completed, install the MATLAB Image Processing Toolbox (Version 11.6, MathWorks) which is required to process two-photon image frames. 
+
+After downloading and installing MATLAB, place all the .m files into the same folder and run the code using MATLAB according to the instructions. Code run time per trial is approximately 15 minutes, but this might change based on the computer processing speed. 
 
 
 
