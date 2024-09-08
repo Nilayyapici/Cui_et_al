@@ -29,7 +29,7 @@ Cui_et_al/2P_opto
 * SpinView software (FLIR systems, Spinnaker 2.0.0.147)
 
 *Confocal imaging* 
-* Zen software (Black edition, 2.1 SP3)
+* Zen software (ZEISS, black edition, 2.1 SP3)
   
 **Data processing**
 
