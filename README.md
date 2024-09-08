@@ -9,10 +9,10 @@ Each folder contains MATLAB code to process two-photon raw imaging data, extract
 
 Folder Contents:
 
-*MATLAB Code: Scripts to process raw data, extract values, and create figures.
-*Readme.txt: A file indicating which figures are generated using the included code.
-*Instruction.txt: A guide on how to run the provided MATLAB code on the raw data.
-*Functions: Contains additional MATLAB functions required for the code to run correctly. Ensure this folder is downloaded along with the main code files.
+* MATLAB Code: Scripts to process raw data, extract values, and create figures.
+* Readme.txt: A file indicating which figures are generated using the included code.
+* Instruction.txt: A guide on how to run the provided MATLAB code on the raw data.
+* Functions: Contains additional MATLAB functions required for the code to run correctly. Ensure this folder is downloaded along with the main code files.
 
 **Folder names**
 
