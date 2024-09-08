@@ -5,10 +5,14 @@ The pipeline for analyzing two-photon imaging uses raw data (unregistered two-ph
 
 **Repository structure**
 
-* Each folder contains MATLAB code to process the two-photon raw imaging data, extract the fluorescent values, and generate the figures for each dataset.
-* The figure numbers that uses the code are indicated in the readme.txt files in each folder.
-* Each folder contains an instruction.txt that explains how the code should be run on the raw data.
-* Each folder contains a "functions" subfolder that contains the additional MATLAB functions required to run the code properly. These functions should be downloaded together with the code. 
+Each folder contains MATLAB code to process two-photon raw imaging data, extract fluorescence values, and generate figures for each dataset. Specific figure numbers that utilize the code are indicated in the readme.txt file within each folder.
+
+Folder Contents:
+
+*MATLAB Code: Scripts to process raw data, extract values, and create figures.
+*Readme.txt: A file indicating which figures are generated using the included code.
+*Instruction.txt: A guide on how to run the provided MATLAB code on the raw data.
+*Functions: Contains additional MATLAB functions required for the code to run correctly. Ensure this folder is downloaded along with the main code files.
 
 **Folder names**
 
