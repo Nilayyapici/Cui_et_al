@@ -14,15 +14,6 @@ Each folder contains MATLAB code to process two-photon raw imaging data, extract
 * **Instruction.txt**: A guide on how to run the provided MATLAB code on the raw data.
 * **Functions**: Contains additional MATLAB functions required for the code to run correctly. Ensure this folder is downloaded along with the main code files.
 
-**Folder names**
-
-Cui_et_al/2P_ingestion
-
-Cui_et_al/2P_opto+ingestion
-
-Cui_et_al/2P_opto
-
-
 **Software Requirements**
 
 **Data collection**
