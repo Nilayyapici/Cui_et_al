@@ -1,2 +1,2 @@
-This code has been used to analyze data and generate the following figures: 
-Fig. 4g, h
+This code has been used to analyze the data in the following figure: 
+Fig. 4g
