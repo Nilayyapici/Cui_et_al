@@ -1,4 +1,4 @@
-This code has been used to analyze data and generate the following figures: 
+This code has been used to analyze the data in the following figures: 
 Fig. 1a-c; 
 Fig. 3b
 Fig. 5d,e
