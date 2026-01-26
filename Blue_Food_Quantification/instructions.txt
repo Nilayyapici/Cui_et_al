@@ -1,1 +1,108 @@
+Blue Food Quantification Protocol (Normalized Blue Food Area)
+
+Before you start (folder organization)
+
+You should have one main folder that contains your dataset, with 3 group folders inside (example below):
+	•	J:\CropData\OD-IN1xTNT\G1-WxIN1
+	•	J:\CropData\OD-IN1xTNT\G2-WxTNT
+	•	J:\CropData\OD-IN1xTNT\G3-TNTxIN1(new)
+
+Each group folder should contain the crop images (TIFs) needed for analysis.
+
+STEP 1 — Draw ROIs + extract blue pixel data
+
+Run: Step1_DrawROIAndExtractData.m
+
+Use these settings:
+
+SkipROIDrawing=1;     % Use 1 if ROISelectionData folder already exists
+YesToAll=1;           % Auto-accept ROI confirmation prompts
+
+InputHSVC1Min=0.55;
+InputHSVC1Max=0.7;
+ReverseMask1OrNot0=1;
+
+BluePixelDetectorHueMin=0.338;  
+BluePixelDetectorHueMax=0.704;
+SaturationMin=0.175;
+CMin=0.825;
+
+ThresholdRatio=0.5;
+FilterSize1=15;
+FilterSize2=15;
+BinThreshold=0.8;
+
+list_of_directories = {...
+   'J:\CropData\OD-IN1xTNT\G1-WxIN1'...
+   'J:\CropData\OD-IN1xTNT\G2-WxTNT'...
+   'J:\CropData\OD-IN1xTNT\G3-TNTxIN1(new)'...
+   };
+
+What this step does:
+	•	Detects the crop/midgut ROIs (or loads your saved ROIs)
+	•	Detects blue pixels inside each ROI
+	•	Saves ROI and extracted measurement data into the group folders
+
+⚠️ Important: The blue pixel detector settings (HueMin/Max, SaturationMin, CMin) must be identical for all samples in the dataset.
+
+STEP 2 — Annotate capillary feeding volume
+
+Run: Step2_CapilaryAnnotation.m
+
+Use these settings:
+
+CapillaryOuterDiameterInMM=1;
+ImageDuplicateNo=2;        
+CapImgFolderName='Cap';
+
+list_of_directories = {...
+   'J:\CropData\OD-IN1xTNT\G1-WxIN1'...
+   'J:\CropData\OD-IN1xTNT\G2-WxTNT'...
+   'J:\CropData\OD-IN1xTNT\G3-TNTxIN1(new)'...
+   };
+
+What this step does:
+	•	Uses capillary images to measure how much food was consumed
+	•	Stores capillary annotation data in a folder named: Cap
+	•	Cap
+
+STEP 3 — Final calculation + generate summary table
+
+✅ Step3_Calculation.m
+
+Use these settings:
+
+InputDataFolderPath='J:\CropData\OD-IN1xTNT';
+GroupNo=3;
+
+CapillaryPhotoFolderName='\Cap';
+
+ColNoTifFileName=1;
+ColNoSizeRatio=2;
+ColNoBlueRatio=3;
+ColNoROI1SizeByMM=4;  
+ColNoROI2SizeByMM=5;  
+ColNoBlueRatioOfROI1=6;
+ColNoNoOfBluePixelInROI1=7;
+ColNoNoOfTotalPixelInROI1=8;
+ColNoBlueRatioOfROI2=9;
+ColNoNoOfBluePixelInROI2=10;
+ColNoNoOfTotalPixelInROI2=11;
+
+UmPerPixel=0.75488;               
+AreaPerPixelInUmSq=UmPerPixel*UmPerPixel;
+
+ColNoFinalFeedingVolumeInMM=2;
+CapillaryInnerRadiusInMM=0.25;
+
+What this step does:
+
+Combines:
+    	•	ROI size (crop/midgut)
+    	•	blue pixel area
+    	•	feeding volume (from capillary)
+    	•	Outputs a summary Excel file:
+    	•	DataSummary.xls
+
+Note: In DataSummary.xls, plot "CropBlueAreaPerNLOfFood (um^2/nl)" is the normalized blue food area metric used in the figures. 
 
