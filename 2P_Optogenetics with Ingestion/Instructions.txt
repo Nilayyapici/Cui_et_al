@@ -1,5 +1,4 @@
 BEFORE YOU START — Data organization and required files
-
 	1.	Confirm trial folders are properly named and organized (consistent naming is required).
 	•	Example: D:\2PhoData\210518\M1T3i-4m-ZT-IN1_GCa,25F11A24D12D_Chr,St,FO,LP20G20,10mA1s,RA
 	
@@ -10,30 +9,29 @@ BEFORE YOU START — Data organization and required files
 
 ****************************************************************************************************************************************************************************************************************
 
-A. PROCESS RAW DATA
-
-STEP 1 — Z-projection of z-stacks
+STEP 1 — Z-projection of Z/t series 
 
 ✅ Run: Step1_BatchZProjectionMaker.m
 
-Set:
+Set parameters:
+
 ProjectionType=1;        % 1 = Max projection, 2 = Mean projection
-WriteMultiPageTiff=0;    
-WriteSeparateTiff=1;
+WriteMultiPageTiff=0;    % 0 = separate .tif images, 1=combined tiff images
+WriteSeparateTiff=1;     % 1 = separate .tif images, 0=combined tiff images
+
 list_of_directories = {...
    'D:\2PhoData\230702'...
 };
 
 Output:
-	•	Creates ZProjected folder in each dataset folder.
+	•	Creates a folder named ZProjected inside each data folder
+	•	Saves projected images there (one per time frame)
 
 ⸻
 
-STEP 2 — Image registration (motion correction)
-
 ✅ Run: Step2_BatchRegistration.m
 
-Set:
+Set parameters:
 
 GetFixedFrameBeforeStart=1;
 ChooseFixedFrame=0;
@@ -43,10 +41,11 @@ AutoFixedFrameNo=345;
 RunRegistration=1;
 UseChoosedFixedFrame=0;
 UseAutoFixedFrame=1;
+UseAdjustedFixedImgForReg=0;
 
 xmlname='Experiment.xml';
 ProjFolderName='ZProjected';
-TransformType='rigid';
+TransformType='rigid';   % try 'rigid' first; if bad try 'translation'
 
 list_of_directories = {...
    'F:\2PhoData\240119'...
@@ -55,24 +54,28 @@ list_of_directories = {...
 };
 
 Output:
-	•	Registered images saved in:
-	•	ZProjected\Reg_Matlab_rigid or ZProjected\Reg_Matlab_translation
+Saves registered images into:
+	•	ZProjected\Reg_Matlab_rigid or
+	•	ZProjected\Reg_Matlab_translation
 
-QC required:
-	•	Manually check registration quality.
-	•	If poor, rerun using the other TransformType.
-	•	If still poor, use FIJI TurboReg → save into ZProjected\TurboReged.
+Critical checkpoint (must do):
+	1.	Open the registered image sequence and visually check registration quality.
+	2.	If poor: Re-run Step 2, switching TransformType between rigid and translation.
+
+If MATLAB registration still fails:
+	•	Use FIJI TurboReg to register the ZProjected stack. Save output as an image sequence into: ZProjected\TurboReged
+	•	If TurboReg still fails: discard the trial or manually register frames using FIJI TrakEM2.
 
 ⸻
 
-STEP 3 — Extract raw fluorescence time series from ROIs
+STEP 3 — ROI fluorescence extraction (raw intensity time series)
 
 ✅ Run: Step3_BatchExtractionMultiROIVer.m
 
-Set:
+Set parameters:
 
 xmlname='Experiment.xml';
-UseMeanProjOrMaxProj='mean';
+UseMeanProjOrMaxProj='mean';  % 'mean' or 'max' t-projection summary image
 ThresholdRatio=0.5;
 
 list_of_directories = {...
@@ -81,14 +84,16 @@ list_of_directories = {...
    'D:\2PhoData\240122'...
 };
 
-During step:
-	•	Draw ROI(s) + background ROI on the summary image.
+What you do during the step:
+	•	Draw: one or more ROI(s) for target area or cell bodies
+	•	Draw: one background ROI
 
 Output:
-	•	Writes RegFluoDatL.xlsx
-	•	Saves copies in:
-	•	registered image folder and
-	•	RawFluo folder
+	•	Extracts mean intensity for each ROI from every frame
+	•	Writes an Excel file: RegFluoDatL.xlsx
+	•	Saves two copies: 1. inside the registered image folder, 2. inside a RawFluo folder
+				
+Each file contains time-series columns for each ROI and background.
 
 ⸻
 
@@ -106,23 +111,27 @@ The ThorSync folder name must match the trial folder name for automatic matching
 
 ✅ Run: Step4_BatchPlotting_MultiROI.m
 
-Core settings:
+Set key parameters (core ones):
 
-BackGroundSubtractionOn1OrOff0=1;
+BackGroundSubtractionOn1OrOff0=1; Set this to 1 if you want background subtraction, set this to 0 if you don’t want background subtraction 
 RawFluoFileName='RegFluoDatL.xlsx';
 xmlname='Experiment.xml';
 
 ThorSyncFileName='Episode001.h5';
 ThorSyncSettingFileName='ThorRealTimeDataSettings.xml';
 
-AutoDetectTrialTime=1;
-ImageTimeMin=4;   % use 4 for 4-min trials, 8 for 8-min
-ImageTimeSec=0;
-
 BasalFrameTime=10;
-BalsalFEndTime=3;
+BalsalFEndTime=3; %This means the basal frame is set to "from the 13 secs before first stim to 3 secs before first stim."
+CutTailFrameNo=0;
 LeastStimInterval=100;
 BGIndThre=0.55;
+
+AutoDetectTrialTime=1;
+ImageTimeMin=8;     % 8 for 8-min trials, 4 for 4-min
+ImageTimeSec=0;
+
+PulseOn=0;
+PesudoFirstStimTime=31;
 
 list_of_directories = {...
    'D:\2PhoData\240119'...
@@ -131,22 +140,21 @@ list_of_directories = {...
 };
 
 Output:
-	•	Quick dF/F preview (QC only; not used in final figures)
-	•	Adds extracted opto stim ON/OFF timing (from ThorSync)
+	•	Quick dF/F preview plots for each trial
+	•	Adds a column indicating stimulus ON/OFF frames (from ThorSync for Opto trials)
 
-QC required:
-	•	Manually verify stim ON/OFF frames by comparing to the frame where background elevation appears in the image stack (ThorSync can be offset).
+Important: These plots are only for QC preview (not used in figures).
+Must manually verify stim timing by comparing ThorSync timing to the actual background elevation in the image stack (ThorSync can be offset).
 
-⸻
+******************************************************************************************************************************************************************************************************
 
-B. OPT0 + INGESTION dF/F0 PROCESSING (figure-ready outputs)
+B. OPT0 + INGESTION dF/F0 PROCESSING 
 
-Inputs required for each trial (Folder A)
+For each trial, you need:
+	•	RegFluoDatL-xxxx.xlsx (or RegFluoDatL.xlsx)
+	•	A matching ingestion annotation file: Ingxxxx.txt
 
-Create one analysis folder (“Folder A”) and place BOTH:
-	•	RegFluoDatL-xxxx.xlsx (from Step 4 outputs)
-	•	matching ingestion file Ingxxxx.txt
-✅ Trial names must match across files.
+✅ Put both in the same folder (“Folder A”). Names must match.
 
 ⸻
 
@@ -166,9 +174,7 @@ WriteInAnotherCol=1;
 
 Output:
 	•	Creates folder: IngAdded
-	•	Generates files containing BOTH:
-	•	ingestion bout indicator
-	•	optogenetic “Light ON” indicator
+	•	Generates files containing BOTH: ingestion bout indicator and optogenetic “Light ON” indicator
 
 ⸻
 
@@ -179,48 +185,38 @@ STEP 6 — Segment and compute dF/F0 aligned to ingestion (or opto offset)
 
 Parameter set #1 — IN1>Chrimson opto activation WITH ingestion (Fig. 4i)
 
-(Updated July 11, 2025)
-
-Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
-
-TimeStartBeforeStim=10;
-TimeStopAfterStim=110;
-TimeResolution=1;
-
-dFFOutlierThreshold=10000;
-BackGroundSubtractionOn1OrOff0=1;
-
-ImageTimeMin=4;
-ImageTimeSec=0;
-TotalTimeInSec=ImageTimeMin*60+ImageTimeSec;
-
-BasalFTimeLength=5;
-BalsalFEndTime=0;   % basal window ends at time 0 (pre-stim)
+	Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
+	TimeStartBeforeStim=10;
+	TimeStopAfterStim=110;
+	TimeResolution=1;
+	dFFOutlierThreshold=10000;
+	BackGroundSubtractionOn1OrOff0=1;
+	ImageTimeMin=4;
+	ImageTimeSec=0;
+	TotalTimeInSec=ImageTimeMin*60+ImageTimeSec;
+	BasalFTimeLength=5;
+	BalsalFEndTime=0;   % basal window ends at time 0 (pre-stim)
 
 Parameter set #2 — Fluorescent food ingestion + opto stim (Fig. 6b–e)
 
-(Updated July 09, 2025)
-
-Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
-
-TimeStartBeforeStim=6;
-TimeStopAfterStim=6;
-TimeResolution=0.5;
-
-dFFOutlierThreshold=10000;
-BackGroundSubtractionOn1OrOff0=1;
-
-ImageTimeMin=4;
-ImageTimeSec=0;
-TotalTimeInSec=ImageTimeMin*60+ImageTimeSec;
-
-BasalFTimeLength=3;
-BalsalFEndTime=0;
+	Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
+	TimeStartBeforeStim=6;
+	TimeStopAfterStim=6;
+	TimeResolution=0.5;
+	dFFOutlierThreshold=10000;
+	BackGroundSubtractionOn1OrOff0=1;
+	ImageTimeMin=4;
+	ImageTimeSec=0;
+	TotalTimeInSec=ImageTimeMin*60+ImageTimeSec;
+	BasalFTimeLength=3;
+	BalsalFEndTime=0;
 
 Output:
 	•	Creates processed segmentation folders inside IngAdded (e.g., stats + aligned traces)
 
-⸻
+*********************************************************************************************************************************************************************************
+
+C. Plotting paths depending on figure type
 
 STEP 7 — Plot separate ROIs for Opto+Ing figures
 
@@ -229,71 +225,53 @@ STEP 7 — Plot separate ROIs for Opto+Ing figures
 
 Plot settings for Fig. 4i (IN1>Chrimson WITH ingestion)
 
-Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
-
-PlotROI3OrNo=0;
-PlotIngestionBout1OrNot0=1;
-PlotSeparateIngBouts=1;
-SaveOverlayBarPlot=0;
-
-TimeResolutionOnExcel=1;
-dFFAUCCalcTimeStart=0;
-dFFAUCCalcTimeStop=110;
-
-YLimSetting=[-5, 60];
-XLimSetting=[-10, 110];
-YStepSize=5;
-XTickStepSize=10;
-
-BoutIndicatorMaxYHeightRatio=0.2;
-PlotTimeBeforeStimOnset=10;
-PlotTimeAfterStimOnset=110;
-
-XFontSize=20;
-YFontSize=20;
+	Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
+	PlotROI3OrNo=0;
+	PlotIngestionBout1OrNot0=1;
+	PlotSeparateIngBouts=1;
+	SaveOverlayBarPlot=0;
+	TimeResolutionOnExcel=1;
+	dFFAUCCalcTimeStart=0;
+	dFFAUCCalcTimeStop=110;
+	YLimSetting=[-5, 60];
+	XLimSetting=[-10, 110];
+	YStepSize=5;
+	XTickStepSize=10;
+	BoutIndicatorMaxYHeightRatio=0.2;
+	PlotTimeBeforeStimOnset=10;
+	PlotTimeAfterStimOnset=110;
+	XFontSize=20;
+	YFontSize=20;
 
 Plot settings for Fig. 6b,d (time 0 = ingestion onset)
 
-Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
-
-PlotROI3OrNo=0;
-PlotIngestionBout1OrNot0=1;
-PlotSeparateIngBouts=1;
-SaveOverlayBarPlot=0;
-
-TimeResolutionOnExcel=0.5;
-dFFAUCCalcTimeStart=0;
-dFFAUCCalcTimeStop=5;
-
-YLimSetting=[-5,60];
-XLimSetting=[-6,5];
-YStepSize=5;
-XTickStepSize=1;
-
-BoutIndicatorMaxYHeightRatio=0.2;
-PlotTimeBeforeStimOnset=6;
-PlotTimeAfterStimOnset=6;
-
-XFontSize=20;
-YFontSize=20;
+	Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
+	PlotROI3OrNo=0;
+	PlotIngestionBout1OrNot0=1;
+	PlotSeparateIngBouts=1;
+	SaveOverlayBarPlot=0;
+	TimeResolutionOnExcel=0.5;
+	dFFAUCCalcTimeStart=0;
+	dFFAUCCalcTimeStop=5;
+	YLimSetting=[-5,60];
+	XLimSetting=[-6,5];
+	YStepSize=5;
+	XTickStepSize=1;
+	BoutIndicatorMaxYHeightRatio=0.2;
+	PlotTimeBeforeStimOnset=6;
+	PlotTimeAfterStimOnset=6;
+	XFontSize=20;
+	YFontSize=20;
 
 
-⸻
+*********************************************************************************************************************************************************************************
 
-C. STATS USED IN FIGURES
+D. Data analysis for opto-ingestions imaging 
 
 Fig. 4j — ingestion duration stats
-	•	Ingestion duration was manually labeled and cross-checked (Cui & Nilay) using the behavioral video recordings from imaging trials.
+	•	Ingestion duration was manually labeled and cross-checked using the behavioral video recordings from imaging trials.
 
 Fig. 6c,e — peak dF/F stats
-	•	Open Stats.xlsx
-	•	Go to sheet: “Peak&AUC”
-	•	Use:
-	•	Column B: PeakdFFG1 (Esophagus)
-	•	Column C: PeakdFFG2 (CropDuct)
+	•	Stats.xlsx/ sheet: “Peak & AUC."
+	•	Use: Column B: PeakdFFG1 (Esophagus) or  Column C: PeakdFFG2 (CropDuct) 
 
-⸻
-
-If you want, I can also produce a very short “cheat sheet” version (one page) that answers:
-	•	“Which Step6/Step7 settings do I use for Fig. 4i vs Fig. 6b–e?”
-	•	“Where exactly are the final stats saved?”
