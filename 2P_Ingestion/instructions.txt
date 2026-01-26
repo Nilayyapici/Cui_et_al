@@ -1,4 +1,5 @@
 BEFORE YOU START — Data organization
+
 	1.	Make sure each trial is in a clearly named folder (consistent naming is critical).
 	•	Example trial folder: D:\2PhoData\210518\M1T3i-4m-ZT-IN1_GCa,25F11A24D12D_Chr,St,FO,LP20G20,10mA1s,RA
 
@@ -6,12 +7,15 @@ BEFORE YOU START — Data organization
 	•	raw imaging data (ThorImage output)
 	•	Experiment.xml (ThorImage metadata)
 
-********************************************************************************************************************************************************************************************************
+
+**********************************************************************************************************************************************************
+
 A. Processing raw imaging data
 
 STEP 1 — Z-projection of Z/t series 
 
 ✅ Run: Step1_BatchZProjectionMaker.m
+
 
 Set parameters:
 
@@ -23,6 +27,7 @@ list_of_directories = {...
    'D:\2PhoData\230702'...
 };
 
+
 Output:
 	•	Creates a folder named ZProjected inside each data folder
 	•	Saves projected images there (one per time frame)
@@ -31,19 +36,19 @@ Output:
 
 STEP 2 — Image registration (motion correction)
 
+
 ✅ Run: Step2_BatchRegistration.m
 
 Set parameters:
 
-GetFixedFrameBeforeStart=1;
-ChooseFixedFrame=0;
-DoAutoFixedFrame=1;
-AutoFixedFrameNo=345;
-
-RunRegistration=1;
-UseChoosedFixedFrame=0;
-UseAutoFixedFrame=1;
-UseAdjustedFixedImgForReg=0;
+	GetFixedFrameBeforeStart=1;
+	ChooseFixedFrame=0;
+	DoAutoFixedFrame=1;
+	AutoFixedFrameNo=345;
+	RunRegistration=1;
+	UseChoosedFixedFrame=0;
+	UseAutoFixedFrame=1;
+	UseAdjustedFixedImgForReg=0;
 
 xmlname='Experiment.xml';
 ProjFolderName='ZProjected';
@@ -60,9 +65,11 @@ Saves registered images into:
 	•	ZProjected\Reg_Matlab_rigid or
 	•	ZProjected\Reg_Matlab_translation
 
+
 Critical checkpoint (must do):
 	1.	Open the registered image sequence and visually check registration quality.
 	2.	If poor: Re-run Step 2, switching TransformType between rigid and translation.
+
 
 If MATLAB registration still fails:
 	•	Use FIJI TurboReg to register the ZProjected stack. Save output as an image sequence into: ZProjected\TurboReged
@@ -143,7 +150,7 @@ Standard settings used for ingestion plots:
 	BasalFTimeLength=10;
 	BalsalFEndTime=0; % basal window = -10s to 0s before ingestion onset
 
-Output:
+utput:
 	•	Creates IngAdded\BindFFSeg (and sometimes IntdFFSeg)
 	•	Contains ingestion-aligned dF/F data tables for each trial/ROI
 
@@ -152,13 +159,23 @@ Special note for some pipelines (fluorescent food ingestion stats):
 	•	BindFFSeg → BindFFSegIo
 (Do this when the downstream plotting/stat script expects BindFFSegIo.)
 
-*************************************************************************************************************************************************************************************
+**********************************************************************************************************************************************************
 
 C. Plotting paths depending on figure type
 
 STEP 7 — Plot separate ROIs Ingestion figures
+1) Gr43a example trace plots (Fig. 2c)
 
-1) Gr43a response plots (Fig. 2d,g; Ext. Data Fig. 4b)
+✅ Run: Step7a_Plot_Single_Example_Trial_Gr43a_BlueFoodIng.m
+
+Key parameters:
+
+	HasOptoAndIngIndicator=0;
+	ImageTimeMin=8;
+	ImageTimeSec=0;
+	PlotROIAveragedFFOrNot=0;
+
+2) Gr43a response plots (Fig. 2d,g; Ext. Data Fig. 4b)
 
 ✅ Run: Step7b_Plot_Responded_Cell_Get_Persistency_Gr43a_BlueFoodIng.m
 
@@ -185,7 +202,7 @@ Outputs:
 	•	Peak dF/F and peak width (persistence metric)
 
 
-2) EN and CEM ingestion responses (Fig. 3d; Fig. 5f, i)
+3) EN and CEM ingestion responses (Fig. 3d; Fig. 5f, i)
 
 ✅ Run: Step7c_Plot_Averaged_Response_BlueFoodIng.m
 
@@ -206,7 +223,7 @@ Figure-specific plotting ranges:
 	YLimSetting=[-0.2, 0.5];% [-0.2, 0.5] for Fig. 3d. [-0.25, 0.05] for Fig. 5f, i. 
 	BoutIndicatorMaxYHeightRatio=0.2; % 0.2 for Fig. 3d. 0.2 for Fig. 5f, i.
 
-3) Fluorescent food ingestion plots (Ext. Data Fig. 10 b,e, i,k and Fig. 4e / Ext. Data Fig. 10g)
+4) Fluorescent food ingestion plots (Ext. Data Fig. 10 b,e, i,k and Fig. 4e / Ext. Data Fig. 10g)
 
 After Step 6:
 	•	Rename IngAdded\BindFFSeg → IngAdded\BindFFSegIo (required)
@@ -233,9 +250,63 @@ Key settings (typical):
 	XFontSize=20;
 	YFontSize=20;
 
-*************************************************************************************************************************************************************************************
+**********************************************************************************************************************************************************
+D. Statistics for CEM neuron imaging with ingestion experiments
 
-D. Data analysis for fluorescent food ingestion 
+(Fig. 5g, h, j, k)
+
+STEP 8c — Calculate peak dF/F and persistence metrics for CEM neurons
+
+✅ Run: Step8c_Calculate_Persistency_CEM.m
+
+Input:
+
+Use the directory containing BindFFSeg folders (generated in Step 6) for each experimental group.
+
+Key parameters:
+	TimeBeforeOnsetInSec = 50;
+	TimeToIncludeIntoCalculationInSec = 50;
+	Persistency2TimeWindowInSec = 50;
+	Persistency3ThresholdFactor = 0.5;
+	Persistency34and5PeakTimeWindow = 10;
+	Persistency4ThresholdFactor = 0.5;
+	Persistency5ThresholdFactor = 0.5;
+
+Example input directories
+
+list_of_directories = { ...
+ 'C:\Users\Yapici\Dropbox\Worki\AvgdFFData-Current\IngstionDFF\222FluoXlsx,NoBGSub\CEM\CEMGCaMP6s,ALL\CEM,1MSuc,Fasted(ContFor100mMSuc)' ...
+ 'C:\Users\Yapici\Dropbox\Worki\AvgdFFData-Current\IngstionDFF\222FluoXlsx,NoBGSub\CEM\CEMGCaMP6s,ALL\CEM,1MSuc,RefedWS' ...
+ 'C:\Users\Yapici\Dropbox\Worki\AvgdFFData-Current\IngstionDFF\222FluoXlsx,NoBGSub\CEM\CEMGCaMP6s,ALL\CEM,100mMSuc,Fasted' ...
+};
+
+Example output settings
+
+OutputPath = 'C:\Users\Yapici\Dropbox\Worki\AvgdFFData-Current\IngstionDFF\222FluoXlsx,NoBGSub\CEM\CEMGCaMP6s,ALL';
+
+GroupTitle = { ...
+ 'Fasted 1M Suc', ...
+ 'Fed 1M Suc', ...
+ 'Fasted 100mM Suc' ...
+};
+% IMPORTANT: The order of GroupTitle must match the order of list_of_directories.
+
+Output
+
+The script generates .xlsx files in the specified OutputPath, each file contains calculated metrics for each group, including:
+•	Peak dF/F
+•	Persistency 2–5 (multiple persistence definitions based on threshold and duration)
+•	Figure-specific metrics used
+
+Fig. 5g, j:
+→ Use “Peak dFF” column
+
+Fig. 5h, k:
+→ Use “Persistency 4” column
+
+**********************************************************************************************************************************************************
+
+E. Data analysis for fluorescent food ingestion 
 
 (Fig. 4f; Ext. Data Fig. 10 c,f,h,j,l)
 
