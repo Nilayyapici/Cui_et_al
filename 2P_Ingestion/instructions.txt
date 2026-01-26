@@ -171,6 +171,7 @@ ImageTimeSec=0;
 Output:
 	•	Creates an IngAdded folder containing files with the ingestion bout indicator added.
 
+⸻
 
 STEP 6 — Segment and calculate dF/F aligned to ingestion onset
 
