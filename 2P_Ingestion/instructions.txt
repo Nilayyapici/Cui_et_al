@@ -1,120 +1,302 @@
-Two-photon imaging analysis pipeline for ingestion experiments
+BEFORE YOU START — Data organization
+	1.	Make sure each trial is in a clearly named folder (consistent naming is critical).
+	•	Example trial folder: D:\2PhoData\210518\M1T3i-4m-ZT-IN1_GCa,25F11A24D12D_Chr,St,FO,LP20G20,10mA1s,RA
 
-Before processing, make sure all raw imaging data are properly organised and named: 
+	2.	Confirm each trial folder includes:
+	•	raw imaging data (ThorImage output)
+	•	Experiment.xml (ThorImage metadata)
 
-The file organization example: 
-D:\2PhoData\210518\M1T3i-4m-ZT-IN1_GCa,25F11A24D12D_Chr,St,FO,LP20G20,10mA1s,RA
+********************************************************************************************************************************************************************************************************
+A. Processing raw imaging data
 
-A. Processing raw data 
+STEP 1 — Z-projection of Z/t series 
 
-Step 1: Z-projection
+✅ Run: Step1_BatchZProjectionMaker.m
 
-Run “Step1_BatchZProjectionMaker.m” by changing the list_of_directories to the directory of the data folder. Set the parameters as below. 
+Set parameters:
 
-ProjectionType=1; %1-MaxProjection, 2-MeanProjection
-WriteMultiPageTiff=0; % Set this to 0 if you want to write separate tif images
-WriteSeparateTiff=1; % Set this to 0 if you want to write multipage tif images
+ProjectionType=1;        % 1 = Max projection, 2 = Mean projection
+WriteMultiPageTiff=0;    % 0 = separate .tif images, 1=combined tiff images
+WriteSeparateTiff=1;     % 1 = separate .tif images, 0=combined tiff images
 
 list_of_directories = {...
    'D:\2PhoData\230702'...
-%     Put the path of the folders to be processed here
-%     'D:\2PhoData\210929'...
-%     'D:\2PhoData\210930'...
-%     'G:\2PhoData\210915'...
-   };
+};
 
-Explanation: This code will compute the average z-axis projection of all captured z-stacks and save the results in a new folder, “ZProjected”, under the data folder.
+Output:
+	•	Creates a folder named ZProjected inside each data folder
+	•	Saves projected images there (one per time frame)
 
-Step 2: Image registration
+⸻
 
-Run “Step2_BatchRegistration.m” by changing the list_of_directories to the directory of the data folder. Set the parameters as follows:
+STEP 2 — Image registration (motion correction)
+
+✅ Run: Step2_BatchRegistration.m
+
+Set parameters:
 
 GetFixedFrameBeforeStart=1;
 ChooseFixedFrame=0;
 DoAutoFixedFrame=1;
-AutoFixedFrameNo=345; %Arbitrarily chosen fixed frame number
+AutoFixedFrameNo=345;
+
 RunRegistration=1;
 UseChoosedFixedFrame=0;
 UseAutoFixedFrame=1;
 UseAdjustedFixedImgForReg=0;
+
 xmlname='Experiment.xml';
 ProjFolderName='ZProjected';
-TransformType='rigid'; % Change if needed! Either use translation or rigid. 
+TransformType='rigid';   % try 'rigid' first; if bad try 'translation'
 
 list_of_directories = {...
    'F:\2PhoData\240119'...
    'F:\2PhoData\240121'...
    'F:\2PhoData\240122'...
-%     'D:\2PhoData\231210'...
-   };
+};
 
-Explanation: This code will register all the Z-projected images inside the “ZProjected” folder and save the registered images in a new folder called “Reg_Matlab_translation” or “Reg_Matlab_rigid” inside the “ZProjected” folder.
-Important: After this step finishes, manually check the registration quality of the registered images! If the registration quality is too bad, run this code again by changing “TransformType='rigid'” to “TransformType='translation’” or the other way around. 
-If the quality is still bad, use TurboReg (a FIJI plugin, website: https://bigwww.epfl.ch/thevenaz/turboreg/) to register the z-projected image stack. 
-If TurboReg can produce a good registration result, make a new folder named “TurboReged” inside the “ZProjected” folder, and save the registered image stack as a .tif image sequence in that “TurboReged” folder. 
-If TurboReg also cannot produce a good registration result, either discard this data or manually register every z-projected frame of the stack using the TrakEM2 function in FIJI. 
+Output:
+Saves registered images into:
+	•	ZProjected\Reg_Matlab_rigid or
+	•	ZProjected\Reg_Matlab_translation
 
-Step 3: Extraction of Raw fluorescent data.
+Critical checkpoint (must do):
+	1.	Open the registered image sequence and visually check registration quality.
+	2.	If poor: Re-run Step 2, switching TransformType between rigid and translation.
 
-Run “Step3_BatchExtractionMultiROIVer.m” by changing the list_of_directories to the directory of the data folder. 
+If MATLAB registration still fails:
+	•	Use FIJI TurboReg to register the ZProjected stack. Save output as an image sequence into: ZProjected\TurboReged
+	•	If TurboReg still fails: discard the trial or manually register frames using FIJI TrakEM2.
 
-Set the parameters in the code as below:
+⸻
 
-xmlname='Experiment.xml'; ( this is the Thor image file for imaging parameters)
-UseMeanProjOrMaxProj='mean';% Input 'mean' for mean t-projection, 'max' for max t-projection
+STEP 3 — ROI fluorescence extraction (raw intensity time series)
+
+✅ Run: Step3_BatchExtractionMultiROIVer.m
+
+Set parameters:
+
+xmlname='Experiment.xml';
+UseMeanProjOrMaxProj='mean';  % 'mean' or 'max' t-projection summary image
 ThresholdRatio=0.5;
+
 list_of_directories = {...
    'D:\2PhoData\240119'...
    'D:\2PhoData\240121'...
    'D:\2PhoData\240122'...
 };
 
-This code will first request the user to draw the ROI(s) and the background ROI. The ROI selection is done in the Z- and t-projected images ("summary image of the trial"). 
+What you do during the step:
+	•	Draw: one or more ROI(s) for target area or cell bodies
+	•	Draw: one background ROI
 
-Once the parameters are set, it will extract the average grey value within each ROI from every frame of the Z projected image stack and store it into an Excel file “RegFluoDatL.xlsx
+Output:
+	•	Extracts mean intensity for each ROI from every frame
+	•	Writes an Excel file: RegFluoDatL.xlsx
+	•	Saves two copies: 1. inside the registered image folder, 2. inside a RawFluo folder
+				
+Each file contains time-series columns for each ROI and background.
 
-If the code runs successfully, it will save two copies of the Excel data file: one in the registered image folder and the other in the RawFluo folder. There should be a time series column for each ROI and a column for the background. 
 
+STEP 4 — (Optogenetic trials only) Add stimulus ON/OFF indicator
 
-Step 4: Extract the optogenetic stimulation time series for optogenetic trials and add the stimulus ON column
+Step 4A — Fix ThorSync folder naming (required)
 
-Before running the code: For optogenetic stimulation, change the “ThorSync001” folder names in the Date Folder to “ThorSync[TrialName].” The Thorsync filename and the 2Pdata filenames must match for the code to work. 
+For optogenetics, rename each ThorSync folder inside the date folder:
+	•	From: ThorSync001
+	•	To: ThorSync[TrialName]
+The ThorSync name must match the 2P trial name for automatic pairing.
 
-Run “Step4_BatchPlotting_MultiROI.m” after changing the list_of_directories to the directory of the data folder. Set the parameters as follows:
+⸻
 
-BackGroundSubtractionOn1OrOff0=1;%Set this to 1 if you want background subtraction, set this to 0 if you don’t want background subtraction 
-FineTuningLightOnFrame=0;(not being used)
+Step 4B — Run plotting + stim extraction
+
+✅ Run: Step4_BatchPlotting_MultiROI.m
+
+Set key parameters (core ones):
+
+BackGroundSubtractionOn1OrOff0=1; Set this to 1 if you want background subtraction, set this to 0 if you don’t want background subtraction 
 RawFluoFileName='RegFluoDatL.xlsx';
 xmlname='Experiment.xml';
+
 ThorSyncFileName='Episode001.h5';
 ThorSyncSettingFileName='ThorRealTimeDataSettings.xml';
-SetColorSpec={[0,0,1];[0,1,0];[0.9290, 0.6940, 0.5250];[1, 0.3, 1];[0.5, 0.70, 0.7410];[0.940, 0.840, 0.6560];[0.5, 0.5, 0.75];...
-   [0.660, 0.8740, 0.480];[0, 0.5, 0.16];[0.5010, 0.7450, 0.9330];[0.6350, 0.0780, 0.2840];[0.6350, 0.0780, 0.55];[0.6350, 0.0780, 0.3];[0.6350, 0.2, 0.55];[0.6350, 0.2780, 0.65];[0.9350, 0.0780, 0.55];[0.8350, 0.780, 0.55];[0.8500, 0.6250, 0.280];[0.6, 0.6250, 0.980];[0.16, 0.1620, 0.980];[0.26, 0.26, 0.9];[0.36, 0.36250, 0.2];[0.46, 0.50, 0.90];[0.1, 0.5, 0.16];[0.2, 0.15, 0.16];[0.3, 0.25, 0.16];[0.4, 0.5, 0.16];[0.5, 0.5, 0.16];[0.6, 0.5, 0.16];[0.7, 0.5, 0.16];[0.8, 0.5, 0.16];[0.9, 0.5, 0.16];[0.4, 0.25, 0.16]};
-BasalFrameTime=10; 
-BalsalFEndTime=3;%This means the basal frame is set to "from the 13 secs before first stim to 3 secs before first stim"
+
+BasalFrameTime=10;
+BalsalFEndTime=3; %This means the basal frame is set to "from the 13 secs before first stim to 3 secs before first stim."
 CutTailFrameNo=0;
-LeastStimInterval=100;%In frame
+LeastStimInterval=100;
 BGIndThre=0.55;
-AutoDetectTrialTime=1;% Set it to 1 ->this code will read the 7th character of your Trial Folder's name and determine the trial time. Set it to 0 to manually input the trial time below
-ImageTimeMin=8; Set to 8 for 8-minute trials, 4 for 4-minute trials.
+
+AutoDetectTrialTime=1;
+ImageTimeMin=8;     % 8 for 8-min trials, 4 for 4-min
 ImageTimeSec=0;
+
 PulseOn=0;
-PesudoFirstStimTime=31;%This is the time of the pseudo-first stimulation used for basal F time window selection when no optogenetic stimulation exists in the trial.
+PesudoFirstStimTime=31;
+
 list_of_directories = {...
    'D:\2PhoData\240119'...
    'D:\2PhoData\240121'...
    'D:\2PhoData\240122'...
 };
 
-Explanation: This code will read 'RegFluoDatL.xlsx', compute and plot the dF/F for each trial in the data folders listed in list_of_directories. 
-This code will also read the optogenetic stimulation pattern data stored in the “Episode001.h5” file from ThorSync, find and record the onset and offset times for each stimulation, and write them into a new column in its output. 
+Output:
+	•	Quick dF/F preview plots for each trial
+	•	Adds a column indicating stimulus ON/OFF frames (from ThorSync for Opto trials)
 
-	
-Note: After this step, manually check the optogenetic stimulation onset and offset frame numbers by comparing them with the actual frame number where the background elevation appears in the data stack. This correction is needed because of issues in ThorSync. 
- 
-B. Calculating and plotting dF/F0
+Important: These plots are only for QC preview (not used in figures).
+Must manually verify stim timing by comparing ThorSync timing to the actual background elevation in the image stack (ThorSync can be offset).
 
-Fig. 2d, g, Extended Data Fig. 4b
+********************************************************************************************************************************************************************************************************
+
+B. dF/F0 analysis aligned to ingestion (figures)
+
+For each trial, you need:
+	•	RegFluoDatL-xxxx.xlsx (or RegFluoDatL.xlsx)
+	•	A matching ingestion annotation file: Ingxxxx.txt
+
+✅ Put both in the same folder (“Folder A”). Names must match.
+
+STEP 5 — Add ingestion bout indicator
+
+✅ Run: Step5_Add_Ingestion_Bout_Indicator_Ing.m
+
+Set:
+
+ImageTimeMin=8;
+ImageTimeSec=0;
+
+Output:
+	•	Creates an IngAdded folder containing files with the ingestion bout indicator added.
 
 
+STEP 6 — Segment and calculate dF/F aligned to ingestion onset
 
+✅ Run: Step6_Segmentation_df_f_calculation_Ing.m
+
+Standard settings used for ingestion plots:
+
+	BackGroundSubtractionOn1OrOff0=0;
+	Time0IsStimOnIndicator1OrIngestionOnIndicator2=2;
+	TimeStartBeforeStim=30;
+	TimeStopAfterStim=30;
+	TimeResolution=1;
+	dFFOutlierThreshold=10000;
+	ImageTimeMin=8;
+	ImageTimeSec=0;
+	TotalTimeInSec=ImageTimeMin*60+ImageTimeSec;
+	BasalFTimeLength=10;
+	BalsalFEndTime=0; % basal window = -10s to 0s before ingestion onset
+
+Output:
+	•	Creates IngAdded\BindFFSeg (and sometimes IntdFFSeg)
+	•	Contains ingestion-aligned dF/F data tables for each trial/ROI
+
+Special note for some pipelines (fluorescent food ingestion stats):
+	•	Rename folder:
+	•	BindFFSeg → BindFFSegIo
+(Do this when the downstream plotting/stat script expects BindFFSegIo.)
+
+********************************************************************************************************************************************************************************************************
+
+C. Plotting paths depending on figure type
+
+1) Gr43a response plots (Fig. 2d,g; Ext. Data Fig. 4b)
+
+✅ Run: Step7b_Plot_Responded_Cell_Get_Persistency_Gr43a_BlueFoodIng.m
+
+Key parameters:
+
+	UseGreatestdFFDuringStim0OrUseMeandFFDuringStim1=0;
+	YLimSetting=[-0.2,1];% Y limit setting for the Mean+-SEM figure
+	FigureWidth=5;
+	FigureHeight=5;
+	BoutIndicatorMaxYHeightRatio=0.2;
+	TimeStartBeforeStim=50;
+	TimeStopAfterStim=50;
+	BasalDFFTimeBeginInSec=-50;
+	BasalDFFTimeEndInSec=0;
+	RespThresFactor=3;
+	TotalTimeSec=TimeStartBeforeStim+TimeStopAfterStim;
+	PersistencyThresholdFactor=0.5;
+	TimeBeforeOnsetInSec=50;
+	TimeToIncludeIntoCalculationInSec=50;
+
+Outputs:
+	•	Plots of responded neurons
+	•	Classification counts: positive/negative / non-responders
+	•	Peak dF/F and peak width (persistence metric)
+
+
+2) EN and CEM ingestion responses (Fig. 3d; Fig. 5f, i)
+
+✅ Run: Step7c_Plot_Averaged_Response_BlueFoodIng.m
+
+Important: This script averages:
+	1.	within each fly across neurons, then
+	2.	across flies.
+
+Common parameters:
+
+	PlotFromFluoData=1;
+	BoutIndicatorMaxYHeightRatio=0.2;
+	PlotTimeBeforeStimOnset=50;
+	PlotTimeAfterStimOnset=50;
+	FigureWidth=5; 
+	FigureHeight=3.5;
+
+Figure-specific plotting ranges:
+	YLimSetting=[-0.2, 0.5];% [-0.2, 0.5] for Fig. 3d. [-0.25, 0.05] for Fig. 5f, i. 
+	BoutIndicatorMaxYHeightRatio=0.2; % 0.2 for Fig. 3d. 0.2 for Fig. 5f, i.
+
+3) Fluorescent food ingestion plots (Ext. Data Fig. 10 b,e, i,k and Fig. 4e / Ext. Data Fig. 10g)
+
+After Step 6:
+	•	Rename IngAdded\BindFFSeg → IngAdded\BindFFSegIo (required)
+
+✅ Run: Step7d_Plot_Separate_ROIs_FluoFoodIng.m
+(Use the path to Folder A; in some cases, remove \IngAdded from the path as noted.)
+
+Key settings (typical):
+	Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
+	PlotROI3OrNo=0;
+	PlotIngestionBout1OrNot0=1;
+	PlotSeparateIngBouts=1;
+	SaveOverlayBarPlot=0;
+	TimeResolutionOnExcel=1;
+	dFFAUCCalcTimeStart=0;
+	dFFAUCCalcTimeStop=50;
+	YLimSetting=[-2, 8];
+	XLimSetting=[-50, 50];
+	YStepSize=2;
+	XTickStepSize=50; %in seconds
+	BoutIndicatorMaxYHeightRatio=0.2;
+	PlotTimeBeforeStimOnset=50;
+	PlotTimeAfterStimOnset=50;
+	XFontSize=20;
+	YFontSize=20;
+
+********************************************************************************************************************************************************************************************************
+
+D. Data analysis for fluorescent food ingestion 
+
+(Fig. 4f; Ext. Data Fig. 10 c,f,h,j,l)
+
+STEP 8d — Calculate peak dF/F0 and “persistence” (peak width at half max)
+
+✅ Run: Step8d_Calculate_Persistency_FluoFoodIng.m
+
+What it computes:
+	•	Peak dF/F0 during ingestion bout
+	•	Peak width (“persistence”): time between rising above and falling below 0.5 × peak
+
+ROI mapping:
+	•	ROI1 = Esophagus
+	•	ROI2 = Crop duct
+
+Which metrics were used:
+	•	Ext. Data 10c, 10j: use peak width of ROI2
+	•	Ext. Data 10f, 10l: use peak width of ROI1
+	•	Fig. 4f: use peak dF/F0 of ROI2
+	•	Ext. Data 10h: use peak dF/F0 of ROI1
