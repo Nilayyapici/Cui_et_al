@@ -1,1 +1,61 @@
+Crop Duct / Esophagus Diameter Measurement Workflow
 
+Step 1 — Manual diameter measurements (MATLAB)
+
+1A. Prepare your input folder
+
+Before starting, create one folder that contains:
+	1.	All mean Z-projected images for that trial (or dataset)
+	2.	One Excel file listing the frames you want to analyze
+	•	The Excel sheet should contain only frame numbers
+	•	One frame number per row
+
+1B. Run the MATLAB script
+
+Run: Step1_Manual_Diameter_Measurement.m
+
+The script will:
+	1.	Ask you to select the input folder (base_folder)
+	2.	For each frame listed in the Excel file, it will prompt you to manually draw a line across the width of:
+	•	the Crop Duct, or
+	•	the Esophagus
+
+1C. Output folders created automatically
+
+After you finish, MATLAB will save outputs into:
+	•	Manual_Measure_Figs
+	•	Manual_Measure_CSV
+
+✅ Important — Create PixelSizeUM.xlsx (required for Step 2). For each trial, locate its Experiment.xml file and extract the pixel size.
+
+
+Step 2 — Diameter analysis + plotting
+
+Run: Step2_Diameter_Analysis_and_Plot.m
+Set these parameters:
+
+input_folder = 'C:\111CXYFiles\Work2024\2025\Zasp66Data_Stats\Stat-New\CropDuct';
+pixel_size_file = 'C:\111CXYFiles\Work2024\2025\Zasp66Data_Stats\Stat-New\PixelSizeUM\PixelSizeUM.xlsx';
+output_folder = 'C:\111CXYFiles\Work2024\2025\Zasp66Data_Stats\Stat-New\NewCropDuct_AnalysisResult';
+
+RedLightOnFrames=[65,185,306];
+RedLightOffFrames=[125,245,366];
+
+TotalTimeOfTrialInSec=240;
+ZProjFrameNumberOfEachTrial=485;
+DataSampledFromEachHowManyFrame=6;
+
+% --- Normalization Settings ---
+EnableNormalization = true;
+BasalTimeWindowSec = [0, 30];
+
+Notes
+	•	These parameters work because all Zasp66 imaging trials in this study used the same settings:
+	•	same red-light ON/OFF frames
+	•	same trial duration
+	•	same number of Z-projected frames
+	•	same sampling rate (1 diameter measurement per 6 frames)
+
+Outputs: All analysis/stat files will be saved in:
+	•	output_folder
+The ΔD/D0 plots (from 0–90 sec) were used for the final Figure. 
