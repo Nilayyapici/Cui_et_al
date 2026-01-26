@@ -99,57 +99,9 @@ Each file contains time-series columns for each ROI and background.
 
 ⸻
 
-STEP 4 — (Optogenetic trials only) Add stimulus ON/OFF indicator
+STEP 4 — This step is not used for Ingestion Only trials-SKIP. 
 
-Step 4A — Fix ThorSync folder naming (required)
-
-For optogenetics, rename each ThorSync folder inside the date folder:
-	•	From: ThorSync001
-	•	To: ThorSync[TrialName]
-The ThorSync name must match the 2P trial name for automatic pairing.
-
-⸻
-
-Step 4B — Run plotting + stim extraction
-
-✅ Run: Step4_BatchPlotting_MultiROI.m
-
-Set key parameters (core ones):
-
-BackGroundSubtractionOn1OrOff0=1; Set this to 1 if you want background subtraction, set this to 0 if you don’t want background subtraction 
-RawFluoFileName='RegFluoDatL.xlsx';
-xmlname='Experiment.xml';
-
-ThorSyncFileName='Episode001.h5';
-ThorSyncSettingFileName='ThorRealTimeDataSettings.xml';
-
-BasalFrameTime=10;
-BalsalFEndTime=3; %This means the basal frame is set to "from the 13 secs before first stim to 3 secs before first stim."
-CutTailFrameNo=0;
-LeastStimInterval=100;
-BGIndThre=0.55;
-
-AutoDetectTrialTime=1;
-ImageTimeMin=8;     % 8 for 8-min trials, 4 for 4-min
-ImageTimeSec=0;
-
-PulseOn=0;
-PesudoFirstStimTime=31;
-
-list_of_directories = {...
-   'D:\2PhoData\240119'...
-   'D:\2PhoData\240121'...
-   'D:\2PhoData\240122'...
-};
-
-Output:
-	•	Quick dF/F preview plots for each trial
-	•	Adds a column indicating stimulus ON/OFF frames (from ThorSync for Opto trials)
-
-Important: These plots are only for QC preview (not used in figures).
-Must manually verify stim timing by comparing ThorSync timing to the actual background elevation in the image stack (ThorSync can be offset).
-
-********************************************************************************************************************************************************************************************************
+**********************************************************************************************************************************************************
 
 B. dF/F0 analysis aligned to ingestion (figures)
 
