@@ -97,6 +97,7 @@ Output:
 				
 Each file contains time-series columns for each ROI and background.
 
+⸻
 
 STEP 4 — (Optogenetic trials only) Add stimulus ON/OFF indicator
 
