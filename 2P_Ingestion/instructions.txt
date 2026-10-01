@@ -175,7 +175,7 @@ Key parameters:
 	ImageTimeSec=0;
 	PlotROIAveragedFFOrNot=0;
 
-2) Gr43a response plots (Fig. 2d,g; Ext. Data Fig. 4b)
+2) Gr43a response plots (Fig. 2d,g; Ext. Data Fig. 4g)
 
 ✅ Run: Step7b_Plot_Responded_Cell_Get_Persistency_Gr43a_BlueFoodIng.m
 
@@ -202,7 +202,7 @@ Outputs:
 	•	Peak dF/F and peak width (persistence metric)
 
 
-3) EN and CEM ingestion responses (Fig. 3d; Fig. 5f, i)
+3) EN and CEM ingestion responses (Extended Data Fig. 8d; Fig. 4f, i)
 
 ✅ Run: Step7c_Plot_Averaged_Response_BlueFoodIng.m
 
@@ -220,10 +220,10 @@ Common parameters:
 	FigureHeight=3.5;
 
 Figure-specific plotting ranges:
-	YLimSetting=[-0.2, 0.5];% [-0.2, 0.5] for Fig. 3d. [-0.25, 0.05] for Fig. 5f, i. 
-	BoutIndicatorMaxYHeightRatio=0.2; % 0.2 for Fig. 3d. 0.2 for Fig. 5f, i.
+	YLimSetting=[-0.2, 0.5];% [-0.2, 0.5] for Extended Data Fig. 8d. [-0.25, 0.05] for Fig. 4f, i. 
+	BoutIndicatorMaxYHeightRatio=0.2; % 0.2 for Extended Data Fig. 8d. 0.2 for Fig. 4f, i.
 
-4) Fluorescent food ingestion plots (Ext. Data Fig. 10 b,e, i,k and Fig. 4e / Ext. Data Fig. 10g)
+4) Fluorescent food ingestion plots (Ext. Data Fig. 10 b,e, g, i,k and Fig. 3e)
 
 After Step 6:
 	•	Rename IngAdded\BindFFSeg → IngAdded\BindFFSegIo (required)
@@ -253,7 +253,7 @@ Key settings (typical):
 **********************************************************************************************************************************************************
 D. Statistics for CEM neuron imaging with ingestion experiments
 
-(Fig. 5g, h, j, k)
+(Fig. 4g, h, j, k)
 
 STEP 8c — Calculate peak dF/F and persistence metrics for CEM neurons
 
@@ -298,17 +298,17 @@ The script generates .xlsx files in the specified OutputPath, each file contains
 •	Persistency 2–5 (multiple persistence definitions based on threshold and duration)
 •	Figure-specific metrics used
 
-Fig. 5g, j:
+Fig. 4g, j:
 → Use “Peak dFF” column
 
-Fig. 5h, k:
+Fig. 4h, k:
 → Use “Persistency 4” column
 
 **********************************************************************************************************************************************************
 
 E. Data analysis for fluorescent food ingestion 
 
-(Fig. 4f; Ext. Data Fig. 10 c,f,h,j,l)
+(Fig. 3f; Ext. Data Fig. 10 c,f,h,j,l)
 
 STEP 8d — Calculate peak dF/F0 and “persistence” (peak width at half max)
 
@@ -325,5 +325,5 @@ ROI mapping:
 Which metrics were used:
 	•	Ext. Data 10c, 10j: use peak width of ROI2
 	•	Ext. Data 10f, 10l: use peak width of ROI1
-	•	Fig. 4f: use peak dF/F0 of ROI2
+	•	Fig. 3f: use peak dF/F0 of ROI2
 	•	Ext. Data 10h: use peak dF/F0 of ROI1
