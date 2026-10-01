@@ -163,7 +163,7 @@ STEP 5 — Add ingestion indicator (and keep Light ON indicator)
 ✅ Run: Step5_Add_Ingestion_Bout_Indicator_OptoWithIng.m
 (location: ...\IngestionImaging\ForOptoIng)
 
-Use these settings (Fig. 4i and Fig. 6b–e are 4-min trials):
+Use these settings (Fig. 3i and Fig. 5b–e are 4-min trials):
 
 ImageTimeMin=4;
 ImageTimeSec=0;
@@ -183,7 +183,7 @@ STEP 6 — Segment and compute dF/F0 aligned to ingestion (or opto offset)
 ✅ Run: Step6_Segmentation_df_f_calculation_OptoWithIng.m
 (using Folder A)
 
-Parameter set #1 — IN1>Chrimson opto activation WITH ingestion (Fig. 4i)
+Parameter set #1 — IN1>Chrimson opto activation WITH ingestion (Fig. 3i)
 
 	Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
 	TimeStartBeforeStim=10;
@@ -197,7 +197,7 @@ Parameter set #1 — IN1>Chrimson opto activation WITH ingestion (Fig. 4i)
 	BasalFTimeLength=5;
 	BalsalFEndTime=0;   % basal window ends at time 0 (pre-stim)
 
-Parameter set #2 — Fluorescent food ingestion + opto stim (Fig. 6b–e)
+Parameter set #2 — Fluorescent food ingestion + opto stim (Fig. 5b–e)
 
 	Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
 	TimeStartBeforeStim=6;
@@ -223,7 +223,7 @@ STEP 7 — Plot separate ROIs for Opto+Ing figures
 ✅ Run: Step7_Plot_Separate_ROIs_OptoWithIng.m
 (using Folder A)
 
-Plot settings for Fig. 4i (IN1>Chrimson WITH ingestion)
+Plot settings for Fig. 3i (IN1>Chrimson WITH ingestion)
 
 	Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
 	PlotROI3OrNo=0;
@@ -243,7 +243,7 @@ Plot settings for Fig. 4i (IN1>Chrimson WITH ingestion)
 	XFontSize=20;
 	YFontSize=20;
 
-Plot settings for Fig. 6b,d (time 0 = ingestion onset)
+Plot settings for Fig. 5b,d (time 0 = ingestion onset)
 
 	Time0AlignedToIngOnset1OrIngOffset2OrOptoOffset3=1;
 	PlotROI3OrNo=0;
@@ -268,10 +268,10 @@ Plot settings for Fig. 6b,d (time 0 = ingestion onset)
 
 D. Data analysis for opto-ingestions imaging 
 
-Fig. 4j — ingestion duration stats
+Fig. 3j — ingestion duration stats
 	•	Ingestion duration was manually labeled and cross-checked using the behavioral video recordings from imaging trials.
 
-Fig. 6c,e — peak dF/F stats
+Fig. 5c,e — peak dF/F stats
 	•	Stats.xlsx/ sheet: “Peak & AUC."
 	•	Use: Column B: PeakdFFG1 (Esophagus) or  Column C: PeakdFFG2 (CropDuct) 
 
