@@ -164,7 +164,7 @@ STEP 5 — Segment trials around opto stimulation and compute dF/F0
 
 Parameter set #1 — 1 second stimulation trials
 
-Used for: Fig. 1a–c, Fig. 5d, Ext. Data Fig. 1c–m, Ext. Data Fig. 7a–o
+Used for: Fig. 1a–c, Fig. 4d, Ext. Data Fig. 1c–m, Ext. Data Fig. 7a–o
 
 	stimtime=1;
 	TimeStartBeforeStim=7;
@@ -177,7 +177,7 @@ Used for: Fig. 1a–c, Fig. 5d, Ext. Data Fig. 1c–m, Ext. Data Fig. 7a–o
 	BalsalFEndTime=1;   % basal window = -6 to -1 sec before stim onset
 	Parameter set #2 — 10-second stimulation trials
 
-Used for: Fig. 5e
+Used for: Fig. 4e
 
 	stimtime=10;
 	TimeStartBeforeStim=10;
@@ -241,7 +241,7 @@ STEP 7 — Calculate peak dF/F from binned data
 
 ✅ Run: Step7_Calculate_peak_df_f_Opto.m
 
-Used for: Fig. 1d, Fig. 3b, Ext. Data Fig. 1n
+Used for: Fig. 1d, Ext. Data Fig. 1n, Extended Data Fig. 8b
 
 Core parameters:
 
