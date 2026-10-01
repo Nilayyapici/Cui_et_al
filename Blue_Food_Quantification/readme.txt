@@ -1,2 +1,2 @@
 This code has been used to analyze the data in the following figure: 
-Fig. 4g
+Fig. 3g, h
